@@ -27,4 +27,5 @@ class PartnerLoad extends BasePartnerLoad {
 		parent::setJobSubType($v);
 	}
 
+	//public function save(PropelPDO $con = null) { return; }
 } // PartnerLoad
