@@ -264,24 +264,23 @@ class kAkamaiUrlManager extends kUrlManager
 		if (count($urls) == 1)
 		{
 			$baseUrl = reset($urls);
+			return '/' . ltrim($baseUrl, '/');
 		}
-		else
+		
+		$prefix = kString::getCommonPrefix($urls);
+		$prefixLen = strlen($prefix);
+		$postfix = kString::getCommonPostfix($urls);
+		$postfixLen = strlen($postfix);
+		$middlePart = ',';
+		foreach ($urls as $url)
 		{
-			$prefix = kString::getCommonPrefix($urls);
-			$prefixLen = strlen($prefix);
-			$postfix = kString::getCommonPostfix($urls);
-			$postfixLen = strlen($postfix);
-			$middlePart = ',';
-			foreach ($urls as $url)
-			{
-				$middlePart .= substr($url, $prefixLen, strlen($url) - $prefixLen - $postfixLen) . ',';
-			}
-			$baseUrl = $prefix . $middlePart . $postfix;
-		} 
-
+			$middlePart .= substr($url, $prefixLen, strlen($url) - $prefixLen - $postfixLen) . ',';
+		}
+		$baseUrl = $prefix . $middlePart . $postfix;
+		
 		return '/' . ltrim($baseUrl, '/') . '.csmil';
 	}
-	
+		
 	public function getManifestUrl(array $flavors)
 	{
 		$url = $this->generateCsmilUrl($flavors);
