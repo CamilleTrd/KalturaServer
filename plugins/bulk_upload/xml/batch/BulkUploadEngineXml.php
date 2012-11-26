@@ -116,7 +116,7 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		
 		$this->loadXslt();
 			
-		$xdoc = new DomDocument();
+		$xdoc = new KDOMDocument();
 		
 		$xmlContent = $this->xslTransform($this->data->filePath);
 		libxml_clear_errors();
