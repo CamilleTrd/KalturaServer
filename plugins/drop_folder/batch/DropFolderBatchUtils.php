@@ -41,6 +41,16 @@ class DropFolderBatchUtils
 	            $publicKey = isset($folder->publicKey) ? $folder->publicKey : null;
 	            $passPhrase = isset($folder->passPhrase) ? $folder->passPhrase : null;
 	            break;
+	       	case KalturaDropFolderType::SFTP_SEC_LIB:
+	            $fileTransferMgr = kFileTransferMgr::getInstance(kFileTransferMgrType::SFTP_SEC_LIB);
+	            $host = $folder->host;
+	            $port = $folder->port;
+	            $username = $folder->username;
+	            $password = $folder->password;
+	            $privateKey = isset($folder->privateKey) ? $folder->privateKey : null;
+	            $publicKey = isset($folder->publicKey) ? $folder->publicKey : null;
+	            $passPhrase = isset($folder->passPhrase) ? $folder->passPhrase : null;
+	            break;
 	        case KalturaDropFolderType::SCP:
 	            $fileTransferMgr = kFileTransferMgr::getInstance(kFileTransferMgrType::SCP);
 	            $host = $folder->host;
