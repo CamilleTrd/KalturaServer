@@ -127,6 +127,14 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
     			{
     				return 'Kaltura_Client_DropFolder_Type_SftpDropFolder';
     			}
+    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_CMD)
+    			{
+    				return 'Kaltura_Client_DropFolder_Type_SftpDropFolder';
+    			}
+    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_SEC_LIB)
+    			{
+    				return 'Kaltura_Client_DropFolder_Type_SftpDropFolder';
+    			}  			
     		}
     		
     		if ($baseClass == 'Form_DropFolderConfigureExtend_SubForm')
@@ -140,6 +148,14 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
     				return 'Form_ScpDropFolderConfigureExtend_SubForm';
     			}
     			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP)
+    			{
+    				return 'Form_SftpDropFolderConfigureExtend_SubForm';
+    			}
+    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_CMD)
+    			{
+    				return 'Form_SftpDropFolderConfigureExtend_SubForm';
+    			}
+    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_SEC_LIB)
     			{
     				return 'Form_SftpDropFolderConfigureExtend_SubForm';
     			}
@@ -169,6 +185,14 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 				return 'KalturaScpDropFolder';
 			}
 			if ($enumValue == KalturaDropFolderType::SFTP)
+			{
+				return 'KalturaSftpDropFolder';
+			}
+			if ($enumValue == KalturaDropFolderType::SFTP_CMD)
+			{
+				return 'KalturaSftpDropFolder';
+			}
+			if ($enumValue == KalturaDropFolderType::SFTP_SEC_LIB)
 			{
 				return 'KalturaSftpDropFolder';
 			}
