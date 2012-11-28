@@ -68,13 +68,13 @@ class DropFolderBatchUtils
 	    try
 	    {
         	// login to server
-        	if (!$privateKey || !$publicKey) {
-        	    $fileTransferMgr->login($host, $username, $password, $port);
-        	}
-        	else {
-        	    $privateKeyFile = self::getTempFileWithContent($privateKey, 'privateKey');
+        	if ($privateKey || $publicKey) {
+        		$privateKeyFile = self::getTempFileWithContent($privateKey, 'privateKey');
         	    $publicKeyFile = self::getTempFileWithContent($publicKey, 'publicKey');
-        	    $fileTransferMgr->loginPubKey($host, $username, $publicKeyFile, $privateKeyFile, $passPhrase, $port);
+        	    $fileTransferMgr->loginPubKey($host, $username, $publicKeyFile, $privateKeyFile, $passPhrase, $port);     		
+         	}
+        	else {
+        		$fileTransferMgr->login($host, $username, $password, $port);     		
         	}
 	    }
 	    catch (Exception $e)
@@ -93,6 +93,8 @@ class DropFolderBatchUtils
 	 */
 	protected static function getTempFileWithContent($fileContent, $prefix = '') 
 	{
+		if(!$fileContent)
+			return null;
 		$tempDirectory = sys_get_temp_dir();
 		$fileLocation = tempnam($tempDirectory, $prefix);		
 		file_put_contents($fileLocation, $fileContent);
