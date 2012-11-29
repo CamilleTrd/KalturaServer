@@ -58,6 +58,9 @@ class embedIframeJsAction extends sfAction
 			$url =  "$host/html5/html5lib/{$html5_version}/mwEmbedLoader.php";
 		}
 
+		if (kString::endsWith($url, "mwEmbedLoader.php"))
+			$url .= "/p/$partner_id/uiconf_id/$uiconf_id";
+
 		requestUtils::sendCachingHeaders(60);
 		header("Pragma:");
 		
