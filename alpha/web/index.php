@@ -116,14 +116,6 @@ function checkCache()
 			$cachedResponse = $cache->get("kwidget$uri");
 			if ($cachedResponse)
 			{
-				// set our uv cookie
-				$uv_cookie = @$_COOKIE['uv'];
-				if (strlen($uv_cookie) != 35)
-				{
-					$uv_cookie = "uv_".md5(uniqid(rand(), true));
-				}
-				setrawcookie( 'uv', $uv_cookie, time() + 3600 * 24 * 365, '/' );
-		
 				header("X-Kaltura:cached-dispatcher");
 				header("Expires: Sun, 19 Nov 2000 08:52:00 GMT");
 				header("Cache-Control" , "no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
