@@ -157,7 +157,7 @@ class KScheduleHelperManager
 	 */
 	public static function saveRunningBatch($statusDirPath, $workerName, $batchIndex)
 	{
-		file_put_contents("$statusDirPath/$workerName.$batchIndex.run", getmypid(), FILE_APPEND);
+		file_put_contents("$statusDirPath/$workerName.$batchIndex.run", getmypid());
 	}
 
 	/**
