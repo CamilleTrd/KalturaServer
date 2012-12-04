@@ -132,9 +132,18 @@ abstract class KalturaBaseService
 			$this->partnerGroup = PartnerPeer::GLOBAL_PARTNER.','.trim($this->partnerGroup,',');
 		}
 		
-		// apply partner filters according to current context and permissions
+		$this->setPartnerFilters($partnerId);
+	}
+
+	/**
+	 * apply partner filters according to current context and permissions
+	 * 
+	 * @param int $partnerId
+	 */
+	protected function setPartnerFilters($partnerId)
+	{
 		myPartnerUtils::resetAllFilters();
-		myPartnerUtils::applyPartnerFilters($partnerId ,$this->private_partner_data ,$this->partnerGroup ,$this->kalturaNetworkAllowed($this->actionName));
+		myPartnerUtils::applyPartnerFilters($partnerId ,$this->private_partner_data ,$this->partnerGroup() ,$this->kalturaNetworkAllowed($this->actionName));
 	}
 	
 /* >--------------------- Security and config settings ----------------------- */
@@ -292,9 +301,6 @@ abstract class KalturaBaseService
 			throw new KalturaAPIException(KalturaErrors::FILE_DOESNT_EXIST);
 
 		list($fileSync, $local) = kFileSyncUtils::getReadyFileSyncForKey($syncKey, true, false);
-		
-		header("Content-Disposition: attachment; filename=\"$fileName\"");
-		
 		if($local)
 		{
 			$filePath = $fileSync->getFullPath();
