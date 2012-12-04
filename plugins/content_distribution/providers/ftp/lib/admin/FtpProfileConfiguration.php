@@ -103,6 +103,9 @@ class Form_FtpProfileConfiguration extends Form_ConfigurableProfileConfiguration
 		$this->setDefault('aspera_public_key_readonly', $object->asperaPublicKey);
 		$this->setDefault('aspera_private_key_readonly', $object->asperaPrivateKey);
 
+		//in edit mode of the form  
+		$this->getElement('protocol')->setAttrib('disabled',true);
+		
 		foreach($fieldConfigArray as $fieldConfig)
 		{
 			if (!isset($fieldConfig->updateParams[0]) && isset($fieldConfig->updateParams[0]->value))
