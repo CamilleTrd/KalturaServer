@@ -1077,7 +1077,7 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		return $updatedEntry;
 	}
 	
-	private function createCategoryAssociations ($entryId, $categories, KalturaBulkUploadResultEntry $bulkuploadResult)
+	private function createCategoryAssociations ($entryId, $categories, KalturaBulkUploadResultEntry $bulkuploadResult, $update = false)
 	{
 		// no change requested
 		if(is_null($categories))
