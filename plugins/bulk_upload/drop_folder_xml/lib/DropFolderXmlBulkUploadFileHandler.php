@@ -73,9 +73,13 @@ class DropFolderXmlBulkUploadFileHandler extends DropFolderFileHandler
 			$this->updateDropFolderFile();
 			return false;
 		}
-		
-		$xmlDoc = new KDOMDocument();
-		$xmlDoc->load($xmlPath);
+	
+		$xmlDoc = null;
+		if (filesize($xmlPath) < 10 * 1024 * 1024)
+		{	
+			$xmlDoc = new KDOMDocument();
+			$xmlDoc->load($xmlPath);
+		}
 
 		if (!$xmlDoc) {
 			$this->dropFolderFile->status = KalturaDropFolderFileStatus::ERROR_HANDLING;
