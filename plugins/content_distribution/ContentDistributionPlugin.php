@@ -91,7 +91,7 @@ class ContentDistributionPlugin extends KalturaPlugin implements IKalturaPermiss
 	public static function getEnums($baseEnumName = null)
 	{
 		if(is_null($baseEnumName))
-			return array('ContentDistributionBatchJobType', 'ContentDistributionFileSyncObjectType', 'ContentDistributionBatchJobObjectType');
+			return array('ContentDistributionBatchJobType', 'ContentDistributionFileSyncObjectType', 'ContentDistributionBatchJobObjectType', 'ContentDistributionObjectFeatureType');
 	
 		if($baseEnumName == 'BatchJobType')
 			return array('ContentDistributionBatchJobType');
@@ -101,6 +101,9 @@ class ContentDistributionPlugin extends KalturaPlugin implements IKalturaPermiss
 		
 		if($baseEnumName == 'BatchJobObjectType')
 			return array('ContentDistributionBatchJobObjectType');
+			
+		if($baseEnumName == 'ObjectFeatureType')
+			return array('ContentDistributionObjectFeatureType');
 			
 		return array();
 	}
@@ -315,6 +318,15 @@ class ContentDistributionPlugin extends KalturaPlugin implements IKalturaPermiss
 	{
 		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
 		return kPluginableEnumsManager::apiToCore('BatchJobType', $value);
+	}
+	
+	/**
+	 * @return int id of dynamic enum in the DB.
+	 */
+	public static function getObjectFeatureTypeCoreValue($valueName)
+	{
+		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+		return kPluginableEnumsManager::apiToCore('ObjectFeatureType', $value);
 	}
 	
 	/**
