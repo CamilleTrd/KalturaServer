@@ -432,9 +432,10 @@ class kMrssManager
 	 * @param entry $entry
 	 * @param SimpleXMLElement $mrss
 	 * @param kMrssParameters $mrssParams
+	 * @params string $features
 	 * @return SimpleXMLElement
 	 */
-	public static function getEntryMrssXml(entry $entry, SimpleXMLElement $mrss = null, kMrssParameters $mrssParams = null)
+	public static function getEntryMrssXml(entry $entry, SimpleXMLElement $mrss = null, kMrssParameters $mrssParams = null, $features = null)
 	{
 		if(is_null($mrss))
 		{
@@ -444,6 +445,10 @@ class kMrssManager
 				
 			$mrss = new SimpleXMLElement('<item/>');
 		}
+		
+		$featuresArr = array();
+		if ($features)
+			$featuresArr = explode(',', $features);
 		
 		$mrss->addChild('entryId', $entry->getId());
 		if($entry->getReferenceID())
@@ -537,17 +542,20 @@ class kMrssManager
 			
 		$mrssContributors = self::getMrssContributors();
 		if(count($mrssContributors))
+		{
 			foreach($mrssContributors as $mrssContributor)
 			{
 				try
 				{
-					$mrssContributor->contribute($entry, $mrss, $mrssParams);
+					if (!count($featuresArr) || in_array($mrssContributor->getObjectFeatureType(), $featuresArr))
+						$mrssContributor->contribute($entry, $mrss, $mrssParams);
 				}
 				catch(kCoreException $ex)
 				{
 					KalturaLog::err("Unable to add MRSS element for contributor [".get_class($mrssContributor)."] message [".$ex->getMessage()."]");
 				}
 			}
+		}
 		
 		if ($mrssParams && 
 			$mrssParams->getIncludePlayerTag())
@@ -560,8 +568,139 @@ class kMrssManager
 			$player = $mrss->addChild('player');
 			$player->addAttribute('url', $playerUrl);
 		}
-				
+
+		if ($mrssParams && $mrssParams->getItemXpathsToExtend())
+		{
+			foreach($mrssParams->getItemXpathsToExtend() as $itemXPathToExtend)
+			{
+				/* @var $itemXPathToExtend KExtendingItemMrssParameter */
+				$xmlNodesToExtend = $mrss->xpath($itemXPathToExtend->getXpath()); //metdata/entryIdX   /entry/customMetadata/metadata/entryIdY
+				foreach ($xmlNodesToExtend as $xmlNodeToExtend)
+				{
+					/* @var $xmlNodeToExtend SimpleXMLElement */
+					$xmlDomNodeToExtend = dom_import_simplexml($xmlNodeToExtend);
+					$nodeToExtendValue = $xmlDomNodeToExtend->nodeValue;
+					$extendingObject = $itemXPathToExtend->getIdentifier()->retrieveByIdentifier($nodeToExtendValue);
+					if ($extendingObject)		
+					{
+						$mrssParams->setItemXpathsToExtend(array());
+						$extendingNode = self::getExtendingItemNode($extendingObject, $xmlNodeToExtend->getName(), $mrssParams, $itemXPathToExtend->getIdentifier()->getExtendedFeatures());
+						KalturaLog::info("extending node: ". $extendingNode->asXML());
+						//Append new node after current one using DOMXML functionality.
+						$domExtendingElement = $xmlDomNodeToExtend->ownerDocument->importNode(dom_import_simplexml($extendingNode), true);
+						if ($xmlDomNodeToExtend->nextSibling)
+							$xmlDomNodeToExtend->parentNode->insertBefore($domExtendingElement,$xmlDomNodeToExtend->nextSibling );
+						else
+							$xmlDomNodeToExtend->parentNode->appendChild($domExtendingElement);
+					}
+				}
+			}
+		}
 		self::addInstanceToPool($entry->getId(), $mrss);
+		return $mrss;
+	}
+	
+	
+	/**
+	 * Function returns MRSS XML for the object based on its identifier
+	 * @param BaseObject $object
+	 * @param string $mrssName
+	 * @param kMrssParameters $mrssParams
+	 * @param string $features
+	 * @return SimpleXMLElement
+	 */
+	public static function getExtendingItemNode (BaseObject $object, $mrssName = null, kMrssParameters $mrssParams = null, $features = null)
+	{
+		$featuresArr = explode(",", $features);
+		switch (get_class($object))
+		{
+			case 'category':
+				$mrss = new SimpleXMLElement("<category_item/>");
+				return self::getCategoryMrssXml($object, $mrss , $mrssParams, $features);
+			case 'entry':
+				if (!$mrssName)
+				{
+					$mrssName = $entry;
+				}
+				$mrss = new SimpleXMLElement("<{$mrssName}_item/>");
+				return self::getEntryMrssXml($object, $mrss, $mrssParams, $features);
+		}
+		
+	}
+	
+	/**
+	 * Function calculates and returns the MRSS XML of a category
+	 * @param category $category
+	 * @param SimpleXMLElement $mrss
+	 * @param kMrssParameters $mrssParams
+	 * @param string $features
+	 * @return SimpleXMLElement
+	 */
+	public static function getCategoryMrssXml (category $category, SimpleXMLElement $mrss = null, kMrssParameters $mrssParams = null, $features = null)
+	{
+		if(is_null($mrss))
+		{
+			$mrss = self::getInstanceFromPool($category->getId());
+			if($mrss)
+				return $mrss;
+				
+			$mrss = new SimpleXMLElement('<item/>');
+		}
+		
+		$featuresArr = array();
+		if (!is_null($features))
+		{
+			$featuresArr = explode(",", $features);
+		}
+		
+		if (!$features || in_array(ObjectFeatureType::METADATA, $featuresArr))
+		{
+			$mrss->addChild("id", $category->getId());
+			$mrss->addChild("name", $category->getName());
+			$mrss->addChild("referenceId", $category->getReferenceId());
+			$mrss->addChild("fullName", $category->getFullName());
+		}
+		
+		$mrssContributors = self::getMrssContributors();
+		if(count($mrssContributors))
+		{
+			foreach($mrssContributors as $mrssContributor)
+			{
+				/* @var $mrssContributor IKalturaMrssContributor */
+				try 
+				{
+					if (!$features || in_array($mrssContributor->getObjectFeatureType(), $featuresArr))
+						$mrssContributor->contribute($category, $mrss, $mrssParams);
+				}
+				catch(kCoreException $ex)
+				{
+					KalturaLog::err("Unable to add MRSS element for contributor [".get_class($mrssContributor)."] message [".$ex->getMessage()."]");
+				}
+			}
+		}
+		
+		if (in_array(ObjectFeatureType::ANCESTOR_RECURSIVE, $featuresArr))
+		{
+			$ancestorIds = explode(">", $category->getFullIds());
+			$ancestorCategories = categoryPeer::retrieveByPKs($ancestorIds);
+			array_pop($ancestorCategories);
+			//find and delete the ANCESTOR_RECURSIVE from the features array
+			for ($i = 0; $i < count($featuresArr); $i++)
+			{
+				if ($featuresArr[$i] == ObjectFeatureType::ANCESTOR_RECURSIVE)
+					unset($featuresArr[$i]);
+			}
+			$features = implode(",", $featuresArr);
+			//retrieve mrss for each ancestor category
+			$parentCategories = $mrss->addChild('parent_categories');
+			foreach ($ancestorCategories as $ancestorCategory )
+			{
+				$ancestorMrss = $parentCategories->addChild('category_item');
+				$ancestorMrss = self::getCategoryMrssXml($ancestorCategory, $ancestorMrss, $mrssParams, $features);
+			}
+		}
+		
+		
 		return $mrss;
 	}
 }
