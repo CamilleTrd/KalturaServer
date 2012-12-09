@@ -108,7 +108,7 @@ class kMetadataMrssManager implements IKalturaMrssContributor
 	 */
 	public function getObjectFeatureType() 
 	{
-		return MetadataPlugin::getObjectFeaturetTypeCoreValue(MetadataObjectFeatureType::CUSTOM_DATA);
+		return MetadataPlugin::getObjectFeatureTypeCoreValue(MetadataObjectFeatureType::CUSTOM_DATA);
 	}
 
 	

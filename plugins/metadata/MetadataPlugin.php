@@ -87,25 +87,39 @@ class MetadataPlugin extends KalturaPlugin implements IKalturaVersion, IKalturaP
 	public static function getEnums($baseEnumName = null)
 	{
 		if(is_null($baseEnumName))
-			return array('MetadataConditionType', 'MetadataBatchJobObjectType');
+			return array('MetadataConditionType', 'MetadataBatchJobObjectType', 'MetadataObjectFeatureType');
 	
 		if($baseEnumName == 'ConditionType')
 			return array('MetadataConditionType');
 		
 		if($baseEnumName == 'BatchJobObjectType')
 			return array('MetadataBatchJobObjectType');
-			
+		
+		if ($baseEnumName == 'ObjectFeatureType')
+			return array ('MetadataObjectFeatureType');
+		
 		return array();
 	}
 
 	
 	/**
+	 * @param string $valueName
 	 * @return int id of dynamic enum in the DB.
 	 */
 	public static function getConditionTypeCoreValue($valueName)
 	{
 		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
 		return kPluginableEnumsManager::apiToCore('ConditionType', $value);
+	}
+	
+	/**
+	 * @param string $valueName
+	 * @return int id of dynamic enum in the DB.
+	 */
+	public static function getObjectFeatureTypeCoreValue ($valueName)
+	{
+		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+		return kPluginableEnumsManager::apiToCore('ObjectFeatureType', $value);
 	}
 	
 	/**
@@ -387,7 +401,7 @@ class MetadataPlugin extends KalturaPlugin implements IKalturaVersion, IKalturaP
 	protected static function addMetadataWithProfileId (BaseObject $object, array $data)
 	{
 	    $metadataProfileId = $data[self::BULK_UPLOAD_COLUMN_PROFILE_ID];
-		$metadataProfile = MetadataProfilePeer::retrieveById($metadataProfileId);
+		$metadataProfile = MetadataProfilePeer::retrieveByPK($metadataProfileId);
 		if(!$metadataProfile)
 		{
 			$errorMessage = "Metadata profile [$metadataProfileId] not found";
