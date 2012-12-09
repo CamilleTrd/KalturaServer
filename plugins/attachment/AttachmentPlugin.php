@@ -46,6 +46,9 @@ class AttachmentPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 		if($baseEnumName == 'assetType')
 			return array('AttachmentAssetType');
 			
+		if ($baseEnumName == 'ObjectFeatureType')
+			return array ('AttachmentAssetType');
+			
 		return array();
 	}
 	
@@ -218,10 +221,27 @@ class AttachmentPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 	}
 	
 	/**
+	 * @return int id of dynamic enum in the DB.
+	 */
+	public static function getObjectFeatureTypeCoreValue($valueName)
+	{
+		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+		return kPluginableEnumsManager::apiToCore('ObjectFeatureType', $value);
+	}
+	
+	/**
 	 * @return string external API value of dynamic enum.
 	 */
 	public static function getApiValue($valueName)
 	{
 		return self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+	}
+	
+	/* (non-PHPdoc)
+	 * @see IKalturaMrssContributor::getObjectFeatureType()
+	 */
+	public function getObjectFeatureType ()
+	{
+		return self::getObjectFeatureTypeCoreValue(AttachmentObjectFeatureType::ATTACHMENT);
 	}
 }
