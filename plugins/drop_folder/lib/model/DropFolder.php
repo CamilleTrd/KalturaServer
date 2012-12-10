@@ -154,4 +154,25 @@ class DropFolder extends BaseDropFolder
 	{
 		return array("dropFolder:id=".$this->getId(), "dropFolder:dc=".$this->getDc());
 	}
+	
+		
+	/**
+	 * @return kFileTransferMgrType
+	 */
+	public function getFileTransferMgrType()
+	{
+		return kFileTransferMgrType::LOCAL;
+	}
+			
+	public function loginByCredentialsType(kFileTransferMgr $fileTransferMgr)
+	{
+		return $fileTransferMgr->login(null, null, null);
+	}
+			
+	public function getLocalFilePath($fileName, $fileId, kFileTransferMgr $fileTransferMgr)
+	{
+		$dropFolderFilePath = $this->getPath().'/'.$fileName;
+		return realpath($dropFolderFilePath);
+	}	
+	
 } // DropFolder

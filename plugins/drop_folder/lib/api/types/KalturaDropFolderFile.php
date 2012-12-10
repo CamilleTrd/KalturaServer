@@ -66,6 +66,25 @@ class KalturaDropFolderFile extends KalturaObject implements IFilterable
 	public $parsedFlavor;
 	
 	/**
+	 * @var int
+	 * @filter eq
+	 */
+	public $leadDropFolderFileId;
+	
+	/**
+	 * @var int
+	 * @filter eq
+	 */
+	public $deletedDropFolderFileId;
+	
+	/**
+	 * @var string
+	 * @filter eq
+	 */
+	public $entryId;
+	
+	
+	/**
 	 * @var KalturaDropFolderFileErrorCode
 	 * @filter eq,in
 	 */
@@ -95,8 +114,32 @@ class KalturaDropFolderFile extends KalturaObject implements IFilterable
 	 * @filter gte,lte,order
 	 */
 	public $updatedAt;
+
+	/**
+	 * @var int
+	 */
+	public $uploadStartDetectedAt;
 	
+	/**
+	 * @var int
+	 */
+	public $uploadEndDetectedAt;
 	
+	/**
+	 * @var int
+	 */
+	public $importStartedAt;
+	
+	/**
+	 * @var int
+	 */
+	public $importEndedAt;
+
+	/**
+	 * @var int
+	 * @readonly
+	 */
+	public $batchJobId;
 	
 	/*
 	 * mapping between the field on this object (on the left) and the setter/getter on the entry object (on the right)  
@@ -111,11 +154,19 @@ class KalturaDropFolderFile extends KalturaObject implements IFilterable
 		'fileSizeLastSetAt',
 		'parsedSlug',
 		'parsedFlavor',
+		'leadDropFolderFileId',
+		'deletedDropFolderFileId',
+		'entryId',
 		'errorCode',
 		'errorDescription',
 	    'lastModificationTime',
 		'createdAt',
 		'updatedAt',
+		'uploadStartDetectedAt',
+		'uploadEndDetectedAt',
+		'importStartedAt',
+		'importEndedAt',
+		'batchJobId',
 	 );
 		 
 	public function getMapBetweenObjects()
@@ -136,9 +187,13 @@ class KalturaDropFolderFile extends KalturaObject implements IFilterable
 	public function fromObject ($source_object)
 	{
 		parent::fromObject($source_object);
+		
+		$this->uploadStartDetectedAt = $source_object->getUploadStartDetectedAt(null);
+		$this->uploadEndDetectedAt = $source_object->getUploadEndDetectedAt(null);
+		$this->importStartedAt = $source_object->getImportStartedAt(null);
+		$this->importEndedAt = $source_object->getImportEndedAt(null);		
 	}
 
-	
 	public function getExtraFilters()
 	{
 		return array();

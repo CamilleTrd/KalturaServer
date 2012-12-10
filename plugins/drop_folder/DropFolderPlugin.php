@@ -6,6 +6,21 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 {
 	const PLUGIN_NAME = 'dropFolder';
 	const DROP_FOLDER_EVENTS_CONSUMER = 'kDropFolderEventsConsumer';
+
+	//Error Messages
+	const ERROR_CONNECT_MESSAGE = 'Failed to connect to the drop folder. Please verify host and port information and/or actual access to the drop folder';
+	const ERROR_AUTENTICATE_MESSAGE = 'Failed to authenticate drop folder credentials or keys. Please verify credential settings';
+	const ERROR_GET_PHISICAL_FILE_LIST_MESSAGE = 'Failed to list files located in the  drop folder. Please verify drop folder path and/or listing permissions in physical drop folder path';
+	const ERROR_GET_DB_FILE_LIST_MESSAGE = 'Failed to list drop folder records in Kaltura DB.  Please verify that Kaltura\'s services and batch system is running properly';
+	const DROP_FOLDER_APP_ERROR_MESSAGE = 'Drop folder applicative error. Please verify that Kaltura\'s services and batch system is running properly. Log Description: ';
+	const ERROR_READING_FILE_MESSAGE = 'Failed to read file or file details at: ';
+	const ERROR_DELETING_FILE_MESSAGE = 'Failed to delete the file at: ';
+	const ERROR_UPDATE_FILE_MESSAGE = 'Failed to update the drop folder file record in Kaltura.';
+	const SLUG_REGEX_NO_MATCH_MESSAGE = 'Failed to parse filename according to drop folder naming convention definition';
+	const ERROR_ADDING_CONTENT_PROCESSOR_MESSAGE = 'Failed to activate the drop folder engine processing for this file';
+	const ERROR_IN_CONTENT_PROCESSOR_MESSAGE = 'Drop folder engine processing failure';
+	const ERROR_DOWNLOADING_FILE_MESSAGE = 'Failed in file transferring from the drop folder to Kaltura';
+	const FLAVOR_NOT_FOUND_MESSAGE = 'Parsed flavor system name could not be found';
 	
 	public static function getPluginName()
 	{
@@ -53,7 +68,7 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 			return null;
 		}
 		
-		if (!is_null($constructorArgs))
+		if (!is_null($constructorArgs) && $objectClass != 'KalturaDropFolderContentProcessorJobData')
 		{
 			$reflect = new ReflectionClass($objectClass);
 			return $reflect->newInstanceArgs($constructorArgs);
@@ -70,15 +85,7 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 	 * @return string
 	 */
 	public static function getObjectClass($baseClass, $enumValue)
-	{			
-		if ($baseClass == 'DropFolderFileHandler')
-		{
-			if ($enumValue == KalturaDropFolderFileHandlerType::CONTENT)
-			{
-				return 'DropFolderContentFileHandler';
-			}
-		}
-		
+	{	
 		if ($baseClass == 'DropFolder')
 		{
 		    if ($enumValue == DropFolderType::LOCAL)
@@ -206,6 +213,15 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 			}
 		}
 		
+		if ($baseClass == 'KalturaJobData')
+		{
+			KalturaLog::debug("in KalturaJobData checking for enum");
+		    if ($enumValue == DropFolderPlugin::getApiValue(DropFolderBatchType::DROP_FOLDER_CONTENT_PROCESSOR))
+			{
+				return 'KalturaDropFolderContentProcessorJobData';
+			}
+		}
+				
 		return null;
 	}
 	
@@ -216,13 +232,17 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 	public static function getEnums($baseEnumName = null)
 	{
 		if(is_null($baseEnumName))
-			return array('DropFolderBatchType','DropFolderPermissionName');
+			return array('DropFolderBatchType','DropFolderPermissionName', 'DropFolderBatchJobObjectType');
 			
 		if($baseEnumName == 'BatchJobType')
 			return array('DropFolderBatchType');
 			
 		if($baseEnumName == 'PermissionName')
 			return array('DropFolderPermissionName');
+			
+		if($baseEnumName == 'BatchJobObjectType')
+			return array('DropFolderBatchJobObjectType');
+			
 			
 		return array();
 	}
@@ -262,4 +282,22 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 			self::DROP_FOLDER_EVENTS_CONSUMER,
 		);
 	}
+	
+	/**
+	 * @return int id of dynamic enum in the DB.
+	 */
+	public static function getCoreValue($type, $valueName)
+	{
+		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+		return kPluginableEnumsManager::apiToCore($type, $value);
+	}
+	
+	/**
+	 * @return string external API value of dynamic enum.
+	 */
+	public static function getApiValue($valueName)
+	{
+		return self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+	}
+	
 }

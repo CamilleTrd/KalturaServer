@@ -2,12 +2,20 @@
 /**
  * @package plugins.dropFolderXmlBulkUpload
  */
-class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBulkUpload, IKalturaPending, IKalturaSchemaDefiner
+class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBulkUpload, IKalturaPending, IKalturaSchemaDefiner, IKalturaEventConsumers
 {
 	const PLUGIN_NAME = 'dropFolderXmlBulkUpload';
 	const XML_BULK_UPLOAD_PLUGIN_VERSION_MAJOR = 1;
 	const XML_BULK_UPLOAD_PLUGIN_VERSION_MINOR = 1;
 	const XML_BULK_UPLOAD_PLUGIN_VERSION_BUILD = 0;
+	const DROP_FOLDER_XML_EVENTS_CONSUMER = 'kDropFolderXmlEventsConsumer';
+
+	//Error Messages
+	const ERROR_ADDING_BULK_UPLOAD_MESSAGE = 'Failed to create bulk upload job in Kaltura';
+	const ERROR_IN_BULK_UPLOAD_MESSAGE = 'Failed  to execute the bulk upload job in Kaltura';
+	const ERROR_ADD_CONTENT_RESOURCE_MESSAGE = 'Failed to add drop folder content resource files';
+	const MALFORMED_XML_FILE_MESSAGE = 'Malformed XML file';
+	const XML_FILE_SIZE_EXCEED_LIMIT_MESSAGE = 'Failed to handle XML, file size exceeds the 10MB limit';
 	
 	/* (non-PHPdoc)
 	 * @see IKalturaPlugin::getPluginName()
@@ -39,7 +47,7 @@ class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBul
 	public static function getEnums($baseEnumName = null)
 	{
 		if(is_null($baseEnumName))
-			return array('DropFolderXmlBulkUploadType', 'DropFolderXmlFileHandlerType', 'DropFolderXmlBulkUploadErrorCode', 'DropFolderXmlSchemaType');
+			return array('DropFolderXmlBulkUploadType', 'DropFolderXmlFileHandlerType', 'DropFolderXmlBulkUploadErrorCode', 'DropFolderXmlSchemaType', 'DropFolderBatchJobObjectType');
 		
 		if($baseEnumName == 'BulkUploadType')
 			return array('DropFolderXmlBulkUploadType');
@@ -52,6 +60,9 @@ class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBul
 			
 		if($baseEnumName == 'SchemaType')
 			return array('DropFolderXmlSchemaType');
+
+		if($baseEnumName == 'BatchJobObjectType')
+			return array('DropFolderBatchJobObjectType');
 			
 		return array();
 	}
@@ -75,11 +86,7 @@ class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBul
 			list($taskConfig, $kClient, $job) = $constructorArgs;
 			return new DropFolderXmlBulkUploadEngine($taskConfig, $kClient, $job);
 		}
-		
-		if ($baseClass == 'DropFolderFileHandler' && $enumValue == KalturaDropFolderFileHandlerType::XML)
-				return new DropFolderXmlBulkUploadFileHandler();
-		
-		
+			
 		if ($baseClass == 'KalturaDropFolderFileHandlerConfig' && $enumValue == self::getFileHandlerTypeCoreValue(DropFolderXmlFileHandlerType::XML))
 			return new KalturaDropFolderXmlBulkUploadFileHandlerConfig();
 	}
@@ -148,7 +155,7 @@ class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBul
 				
 	<xs:complexType name="T_dropFolderFileContentResource">
 		<xs:choice minOccurs="0" maxOccurs="1">
-			<xs:element name="fileSize" type="xs:int" minOccurs="1" maxOccurs="1">
+			<xs:element name="fileSize" type="xs:long" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>
 						The expected size of the file<br/>
@@ -278,6 +285,19 @@ class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBul
 		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
 		return kPluginableEnumsManager::apiToCore('DropFolderFileHandlerType', $value);
 	}
+
+	public static function getErrorCodeCoreValue($valueName)
+	{
+		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+		return kPluginableEnumsManager::apiToCore('DropFolderFileErrorCode', $value);
+	}
+	
+	public static function getBatchJobObjectTypeCoreValue($valueName)
+	{
+		$value = self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+		return kPluginableEnumsManager::apiToCore('BatchJobObjectType', $value);
+	}
+		
 	
 	/**
 	 * @return string external API value of dynamic enum.
@@ -285,5 +305,12 @@ class DropFolderXmlBulkUploadPlugin extends KalturaPlugin implements IKalturaBul
 	public static function getApiValue($valueName)
 	{
 		return self::getPluginName() . IKalturaEnumerator::PLUGIN_VALUE_DELIMITER . $valueName;
+	}
+	
+	public static function getEventConsumers()
+	{
+		return array(
+			self::DROP_FOLDER_XML_EVENTS_CONSUMER,
+		);
 	}
 }

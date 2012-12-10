@@ -111,9 +111,13 @@ class FtpDropFolder extends RemoteDropFolder
 	    return $jobData;	    
 	}
 	
-	public function getFileTransferMgrType()
+	protected function getRemoteFileTransferMgrType()
 	{
 	    return kFileTransferMgrType::FTP;
 	}
-    
+	
+	public function loginByCredentialsType(kFileTransferMgr $fileTransferMgr)
+	{
+		return $fileTransferMgr->login($this->getFtpHost(), $this->getFtpUsername(), $this->getFtpPassword(), $this->getFtpPort());
+	}    
 }
