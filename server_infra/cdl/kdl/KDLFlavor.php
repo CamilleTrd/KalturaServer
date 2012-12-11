@@ -406,7 +406,7 @@ $plannedDur = 0;
 		if($sourceDur>0 && $sourceDur<$target->_clipStart+$target->_clipDur) {
 			// Mantis 15712 case
 			// zeroing the clipDur causes duration validation issues when cliping the end of the file.
-			$target->_clipDur=0;			
+//			$target->_clipDur=0;			
 			$target->_explicitClipDur=$sourceDur-$target->_clipStart;
 		}
 		else if(isset($target->_clipStart) && (!isset($target->_clipDur) || $target->_clipDur==0)){
