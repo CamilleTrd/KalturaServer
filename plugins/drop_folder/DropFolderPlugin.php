@@ -6,7 +6,7 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 {
 	const PLUGIN_NAME = 'dropFolder';
 	const DROP_FOLDER_EVENTS_CONSUMER = 'kDropFolderEventsConsumer';
-
+	
 	//Error Messages
 	const ERROR_CONNECT_MESSAGE = 'Failed to connect to the drop folder. Please verify host and port information and/or actual access to the drop folder';
 	const ERROR_AUTENTICATE_MESSAGE = 'Failed to authenticate drop folder credentials or keys. Please verify credential settings';
@@ -21,6 +21,7 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 	const ERROR_IN_CONTENT_PROCESSOR_MESSAGE = 'Drop folder engine processing failure';
 	const ERROR_DOWNLOADING_FILE_MESSAGE = 'Failed in file transferring from the drop folder to Kaltura';
 	const FLAVOR_NOT_FOUND_MESSAGE = 'Parsed flavor system name could not be found';
+	
 	
 	public static function getPluginName()
 	{
@@ -104,14 +105,6 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 			{
 				return 'SftpDropFolder';
 			}
-			if ($enumValue == DropFolderType::SFTP_CMD)
-			{
-				return 'SftpDropFolder';
-			}
-			if ($enumValue == DropFolderType::SFTP_SEC_LIB)
-			{
-				return 'SftpDropFolder';
-			}
 		}
 		
 		if (class_exists('Kaltura_Client_Client'))
@@ -134,14 +127,6 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
     			{
     				return 'Kaltura_Client_DropFolder_Type_SftpDropFolder';
     			}
-    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_CMD)
-    			{
-    				return 'Kaltura_Client_DropFolder_Type_SftpDropFolder';
-    			}
-    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_SEC_LIB)
-    			{
-    				return 'Kaltura_Client_DropFolder_Type_SftpDropFolder';
-    			}  			
     		}
     		
     		if ($baseClass == 'Form_DropFolderConfigureExtend_SubForm')
@@ -155,14 +140,6 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
     				return 'Form_ScpDropFolderConfigureExtend_SubForm';
     			}
     			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP)
-    			{
-    				return 'Form_SftpDropFolderConfigureExtend_SubForm';
-    			}
-    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_CMD)
-    			{
-    				return 'Form_SftpDropFolderConfigureExtend_SubForm';
-    			}
-    			if ($enumValue == Kaltura_Client_DropFolder_Enum_DropFolderType::SFTP_SEC_LIB)
     			{
     				return 'Form_SftpDropFolderConfigureExtend_SubForm';
     			}
@@ -195,14 +172,6 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 			{
 				return 'KalturaSftpDropFolder';
 			}
-			if ($enumValue == KalturaDropFolderType::SFTP_CMD)
-			{
-				return 'KalturaSftpDropFolder';
-			}
-			if ($enumValue == KalturaDropFolderType::SFTP_SEC_LIB)
-			{
-				return 'KalturaSftpDropFolder';
-			}
 		}
 		
 		if ($baseClass == 'KalturaImportJobData')
@@ -220,8 +189,7 @@ class DropFolderPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 			{
 				return 'KalturaDropFolderContentProcessorJobData';
 			}
-		}
-				
+		}		
 		return null;
 	}
 	

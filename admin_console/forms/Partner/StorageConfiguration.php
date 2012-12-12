@@ -53,11 +53,10 @@ class Form_Partner_StorageConfiguration extends Infra_Form
 			'filters'		=> array('StringTrim'),
 			'multiOptions'  => array(Kaltura_Client_Enum_StorageProfileProtocol::FTP => 'FTP',
 									Kaltura_Client_Enum_StorageProfileProtocol::SFTP => 'SFTP',
-									Kaltura_Client_Enum_StorageProfileProtocol::SFTP_CMD => 'SFTP CMD',
-									Kaltura_Client_Enum_StorageProfileProtocol::SFTP_SEC_LIB => 'SFTP secLib',
 									Kaltura_Client_Enum_StorageProfileProtocol::SCP => 'SCP',
 									Kaltura_Client_Enum_StorageProfileProtocol::S3 => 'Amazon S3'
 									),
+		
 		));
 		 
 		$this->addElement('text', 'storageUrl', array(
@@ -143,10 +142,11 @@ class Form_Partner_StorageConfiguration extends Infra_Form
 			'multiOptions'  => array('kPathManager' => 'Kaltura Path',
 									'kExternalPathManager' => 'External Path',
 		    						'kXslPathManager' => 'XSL Path',
-									),			
+									),					
 		));
 		$this->getElement('pathManagerClass')->setRegisterInArrayValidator(false);
 		 
+		
 		$this->addElement('select', 'urlManagerClass', array(
 			'label'			=> 'Delivery URL format :',
 			'filters'		=> array('StringTrim'),
@@ -157,15 +157,17 @@ class Form_Partner_StorageConfiguration extends Infra_Form
 									'kLevel3UrlManager' => 'Level 3 CDN',
 		    						'kMirrorImageUrlManager' => 'Mirror Image CDN',
 									),		
+			
 		));
 		$this->getElement('urlManagerClass')->setRegisterInArrayValidator(false);
 		 
+		
 		$this->addElement('select', 'trigger', array(
 			'label'			=> 'Trigger:',
 			'filters'		=> array('StringTrim'),
 			'multiOptions'  => array(3 => 'Flavor Ready',
 									2 => 'Moderation Approved',
-							  ),
+							  ),	
 		));
 		
 		$readyBehavior = new Kaltura_Form_Element_EnumSelect('readyBehavior', array('enum' => 'Kaltura_Client_Enum_StorageProfileReadyBehavior'));

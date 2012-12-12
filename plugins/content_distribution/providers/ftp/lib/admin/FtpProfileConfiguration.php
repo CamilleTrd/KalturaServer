@@ -102,10 +102,10 @@ class Form_FtpProfileConfiguration extends Form_ConfigurableProfileConfiguration
 		$this->setDefault('sftp_private_key_readonly', $object->sftpPrivateKey);
 		$this->setDefault('aspera_public_key_readonly', $object->asperaPublicKey);
 		$this->setDefault('aspera_private_key_readonly', $object->asperaPrivateKey);
-
+		
 		//in edit mode of the form  
 		$this->getElement('protocol')->setAttrib('disabled',true);
-		
+
 		foreach($fieldConfigArray as $fieldConfig)
 		{
 			if (!isset($fieldConfig->updateParams[0]) && isset($fieldConfig->updateParams[0]->value))
@@ -136,8 +136,6 @@ class Form_FtpProfileConfiguration extends Form_ConfigurableProfileConfiguration
 			'multiOptions' 		=> array(
 				Kaltura_Client_ContentDistribution_Enum_DistributionProtocol::FTP => 'FTP',
 				Kaltura_Client_ContentDistribution_Enum_DistributionProtocol::SFTP => 'SFTP',
-				Kaltura_Client_ContentDistribution_Enum_DistributionProtocol::SFTP_CMD => 'SFTP Command line',
-				Kaltura_Client_ContentDistribution_Enum_DistributionProtocol::SFTP_SEC_LIB => 'SFTP SecLib',
 				Kaltura_Client_ContentDistribution_Enum_DistributionProtocol::ASPERA => 'ASPERA',
 			),
 			'required'		=> true,
