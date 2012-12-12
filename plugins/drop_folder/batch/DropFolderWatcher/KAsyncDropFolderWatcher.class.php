@@ -112,8 +112,7 @@ class KAsyncDropFolderWatcher extends KPeriodicWorker
 			{	
 				KalturaLog::debug('Watch file ['.$physicalFileName.']');
 				
-				$dropFolderFile = $dropFolderFilesMap[$physicalFileName];		
-				if(!!array_key_exists($physicalFileName, $dropFolderFilesMap))
+				if(!array_key_exists($physicalFileName, $dropFolderFilesMap))
 				{
 					try 
 					{
