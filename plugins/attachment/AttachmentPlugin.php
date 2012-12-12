@@ -41,13 +41,13 @@ class AttachmentPlugin extends KalturaPlugin implements IKalturaServices, IKaltu
 	public static function getEnums($baseEnumName = null)
 	{
 		if(is_null($baseEnumName))
-			return array('AttachmentAssetType');
+			return array('AttachmentAssetType', 'AttachmentObjectFeatureType');
 	
 		if($baseEnumName == 'assetType')
 			return array('AttachmentAssetType');
 			
 		if ($baseEnumName == 'ObjectFeatureType')
-			return array ('AttachmentAssetType');
+			return array ('AttachmentObjectFeatureType');
 			
 		return array();
 	}
