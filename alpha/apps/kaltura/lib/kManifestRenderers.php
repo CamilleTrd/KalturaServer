@@ -119,6 +119,7 @@ class kSingleUrlManifestRenderer extends kManifestRenderer
 	protected function replaceDeliveryCode()
 	{
 		$this->flavor['url'] = str_replace("{deliveryCode}", $this->deliveryCode, $this->flavor['url']);
+		$this->flavor['urlPrefix'] = str_replace("{deliveryCode}", $this->deliveryCode, $this->flavor['urlPrefix']);
 	}
 	
 	protected function tokenizeUrls()
