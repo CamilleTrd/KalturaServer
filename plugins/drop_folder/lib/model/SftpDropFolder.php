@@ -24,11 +24,6 @@ class SftpDropFolder extends SshDropFolder
 	
 	protected function getRemoteFileTransferMgrType()
 	{
-		if($this->getType() == DropFolderType::SFTP)
-	    	return kFileTransferMgrType::SFTP;
-	    if($this->getType() == DropFolderType::SFTP_CMD)
-	    	return kFileTransferMgrType::SFTP_CMD;
-		if($this->getType() == DropFolderType::SFTP_SEC_LIB)
-	    	return kFileTransferMgrType::SFTP_SEC_LIB;	    	
+	    return kFileTransferMgrType::SFTP;
 	}        
 }
