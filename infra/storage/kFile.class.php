@@ -533,7 +533,13 @@ class kFile
 	public static function read_header($ch, $string)
 	{
 		$length = strlen($string);
-		header($string);
+
+		// we shouldnt return a chunked encoded header as we read the whole response and echo it after curl extracts it
+		if (strpos($string, "Transfer-Encoding: chunked") === FALSE)
+		{
+			header($string);
+		}
+
 		return $length;
 	}
 	
