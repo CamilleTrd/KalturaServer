@@ -12,6 +12,7 @@ class LiveStreamService extends KalturaEntryService
 	const DEFAULT_BITRATE = 300;
 	const DEFAULT_WIDTH = 320;
 	const DEFAULT_HEIGHT = 240;
+	const ISLIVE_ACTION_CACHE_EXPIRY = 30;
 	
 	/**
 	 * Adds new live stream entry.
@@ -225,4 +226,113 @@ class LiveStreamService extends KalturaEntryService
  			
 		return $dbEntry;
 	}	
+	
+	/**
+	 * New action delivering the status of a live stream (on-air/offline) if it is possible
+	 * @action isLive
+	 * @param string $id ID of the live stream
+	 * @param KalturaPlaybackProtocol $protocol protocol of the stream to test.
+	 * @throws KalturaErrors::LIVE_STREAM_STATUS_CANNOT_BE_DETERMINED
+	 * @throws KalturaErrors::INVALID_ENTRY_ID
+	 * @return bool
+	 */
+	public function isLiveAction ($id, $protocol)
+	{
+		KalturaResponseCacher::setExpiry(self::ISLIVE_ACTION_CACHE_EXPIRY);
+		$liveStreamEntry = entryPeer::retrieveByPK($id);
+		if (!$liveStreamEntry)
+			throw new KalturaAPIException(KalturaErrors::INVALID_ENTRY_ID, $id);
+		
+		if ($liveStreamEntry)
+		{
+			switch ($protocol)
+			{
+				case KalturaPlaybackProtocol::HLS:
+					KalturaLog::info('Determining status of live stream URL [' .$liveStreamEntry->getHlsStreamUrl(). ']');
+					return $this->hlsUrlExistsRecursive($liveStreamEntry->getHlsStreamUrl());
+					break;
+				case KalturaPlaybackProtocol::AKAMAI_HDS:
+					$config = kLiveStreamConfiguration::getSingleItemByPropertyValue($liveStreamEntry, "protocol", $protocol);
+					if ($config)
+					{
+						KalturaLog::info('Determining status of live stream URL [' .$config->getUrl() . ']');
+						return $this->hdsUrlExists($config->getUrl());
+					}
+					break;
+			}
+		}
+		
+		throw new KalturaAPIException(KalturaErrors::LIVE_STREAM_STATUS_CANNOT_BE_DETERMINED, $protocol);
+	}
+	
+	
+	
+	/**
+	 * Method checks whether the URL passed to it as a parameter returns a response.
+	 * @param string $url
+	 * @return string
+	 */
+	private function urlExists ($url, $contentTypeToReturn)
+	{
+		if (is_null($url)) 
+			return false;  
+		if (!function_exists('curl_init'))
+		{
+			KalturaLog::err('Unable to use util when php curl is not enabled');
+			return false;  
+		}
+	    $ch = curl_init($url);  
+	    curl_setopt($ch, CURLOPT_TIMEOUT, 5);  
+	    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);  
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+	    $data = curl_exec($ch);  
+	    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);  
+	    $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+	    curl_close($ch);  
+	    if($data && $httpcode>=200 && $httpcode<300)
+	    {
+	        return $contentType == $contentTypeToReturn ? $data : true;
+	    }  
+	    else 
+	        return false;  
+	}	
+	
+	/**
+	 * Recursive function which returns true/false depending whether the given URL returns a valid video eventually
+	 * @param string $url
+	 * @return bool
+	 */
+	private function hlsUrlExistsRecursive ($url)
+	{
+		$data = $this->urlExists($url, 'application/vnd.apple.mpegurl');
+		if(is_bool($data))
+			return $data;
+		
+		$lines = explode("\n", trim($data));
+		if(!preg_match("/http.*/", array_pop($lines), $matches))
+			return false;
+			
+		$lastMatch = $matches[0];
+		return $this->hlsUrlExistsRecursive($lastMatch);
+	}
+	
+	/**
+	 * Function which returns true/false depending whether the given URL returns a live video
+	 * @param string $url
+	 * @return true
+	 */
+	private function hdsUrlExists ($url) 
+	{
+		$data = $this->urlExists($url, 'video/f4m');
+		if (is_bool($data))
+			return $data;
+		
+		$element = new KDOMDocument();
+		$element->loadXML($data);
+		$streamType = $element->getElementsByTagName('streamType')->item(0);
+		if ($streamType->nodeValue == 'live')
+			return true;
+		
+		return false;
+	}
 }
