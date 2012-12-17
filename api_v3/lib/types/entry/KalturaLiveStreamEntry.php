@@ -87,6 +87,12 @@ class KalturaLiveStreamEntry extends KalturaMediaEntry
 	 */
 	public $urlManager;
 	
+	/**
+	 * Array of key value protocol->live stream url objects
+	 * @var KalturaLiveStreamConfigurationArray
+	 */
+	public $liveStreamConfigurations;
+	
 	
 	
 	private static $map_between_objects = array
@@ -103,6 +109,7 @@ class KalturaLiveStreamEntry extends KalturaMediaEntry
 	    "dvrStatus",
 	    "dvrWindow",
 	    "urlManager",
+		"liveStreamConfigurations",
 	);
 
 	public function __construct()
@@ -117,14 +124,14 @@ class KalturaLiveStreamEntry extends KalturaMediaEntry
 		return array_merge(parent::getMapBetweenObjects(), self::$map_between_objects);
 	}
 
-	public function fromObject ( $source_object )
+	public function fromObject ( $dbObject )
 	{
-		if(!($source_object instanceof entry))
+		if(!($dbObject instanceof entry))
 			return;
 			
-		parent::fromObject($source_object);
+		parent::fromObject($dbObject);
 
-		$bitrates = $source_object->getStreamBitrates();
+		$bitrates = $dbObject->getStreamBitrates();
 		if(is_array($bitrates))
 			$this->bitrates = KalturaLiveStreamBitrateArray::fromLiveStreamBitrateArray($bitrates);
 	}
@@ -135,8 +142,7 @@ class KalturaLiveStreamEntry extends KalturaMediaEntry
 		
 		if($this->bitrates)
 			$dbObject->setStreamBitrates($this->bitrates->toArray());
-			
+				
 		return $dbObject;
 	}
 }
-?>
