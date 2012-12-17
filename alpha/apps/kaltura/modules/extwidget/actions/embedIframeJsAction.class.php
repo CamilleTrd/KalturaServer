@@ -44,8 +44,13 @@ class embedIframeJsAction extends sfAction
 			}
 		}
 
+		$autoEmbed = $this->getRequestParameter('autoembed');
+		if ($autoEmbed)
+			$host = "http://localhost/";
+
 		if( kString::beginsWith( $ui_conf_html5_url , "http") )
 		{
+			$autoEmbed = false;
 			$url = $ui_conf_html5_url; // absolute URL
 		}
 		else if ($ui_conf_html5_url)
@@ -60,6 +65,13 @@ class embedIframeJsAction extends sfAction
 
 		if (kString::endsWith($url, "mwEmbedLoader.php"))
 			$url .= "/p/$partner_id/uiconf_id/$uiconf_id";
+
+		if ($autoEmbed)
+		{
+			//die($url."?".$_SERVER["QUERY_STRING"]);
+			header("pragma:");
+			kFileUtils::dumpUrl($url."?".$_SERVER["QUERY_STRING"]);
+		}
 
 		requestUtils::sendCachingHeaders(60);
 		header("Pragma:");
