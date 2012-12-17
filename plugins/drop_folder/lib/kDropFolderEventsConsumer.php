@@ -208,7 +208,7 @@ class kDropFolderEventsConsumer implements kBatchJobStatusEventConsumer, kObject
 				return true;
 		}
 		KalturaLog::debug('Flavor name not found ['.$file->getParsedFlavor().']');
-		$this->setFileError($file, DropFolderFileStatus::ERROR_HANDLING, DropFolderFileErrorCode::FLAVOR_NOT_FOUND, DropFolderPlugin::FLAVOR_NOT_FOUND_MESSAGE);
+		$this->setFileError($file, DropFolderFileStatus::ERROR_HANDLING, DropFolderFileErrorCode::FLAVOR_NOT_FOUND, DropFolderPlugin::FLAVOR_NOT_FOUND_MESSAGE.$file->getParsedFlavor());
 		
 		return false;
 	}
