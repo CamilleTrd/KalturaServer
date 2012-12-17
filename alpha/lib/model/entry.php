@@ -3099,4 +3099,16 @@ class entry extends Baseentry implements ISyncableFile, IIndexable, IOwnable
 	{
 	    $this->putInCustomData("url_manager", $v);
 	}
+	
+	public function setLiveStreamConfigurations (array $v)
+	{
+		$this->putInCustomData('live_stream_configurations', $v);
+	}
+	
+	public function getLiveStreamConfigurations ()
+	{
+		return $this->getFromCustomData('live_stream_configurations', null, array());
+	}
+	
+	
 }
