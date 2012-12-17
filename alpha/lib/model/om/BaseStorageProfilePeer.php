@@ -763,8 +763,6 @@ abstract class BaseStorageProfilePeer {
 	{
 		$results = array();
 	
-		// set the class once to avoid overhead in the loop
-		$cls = StorageProfilePeer::getOMClass(false);
 		// populate the object(s)
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 			$key = StorageProfilePeer::getPrimaryKeyHashFromRow($row, 0);
