@@ -383,6 +383,8 @@ class kDropFolderEventsConsumer implements kBatchJobStatusEventConsumer, kObject
 				
 			KalturaLog::debug('Parsed slug ['.$parsedSlug.'], Parsed flavor ['.$parsedFlavor.']');
 		}
+		if(!$parsedSlug)
+			$matchFound = false;
 		
 		return $matchFound;
 	}
