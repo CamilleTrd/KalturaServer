@@ -48,7 +48,7 @@ class DropFolderConfigureAction extends KalturaApplicationPlugin
 					$dropFolderType = $dropFolder->type;
 					$dropFolderForm = new Form_DropFolderConfigure($partnerId, $dropFolderType);
 					$dropFolderForm->populateFromObject($dropFolder, false);
-					$dropFolderForm->getElement('fileHandlerType')->setOptions(array('disabled'	=> 'disabled'));
+					//$dropFolderForm->getElement('fileHandlerType')->setOptions(array('disabled'	=> 'disabled'));
 				}
 				else
 				{
