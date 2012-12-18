@@ -37,7 +37,7 @@ $action = $argv[1];
 $filePath = $argv[2];
 $fileSize = $argv[3];
 
-$fileName=basename($filePath);
+$fileName=basename($filePath,'.filepart');
 $folderPath = dirname($filePath);
 
 
