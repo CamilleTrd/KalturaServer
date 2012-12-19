@@ -67,6 +67,13 @@ class DropFolderFile extends BaseDropFolderFile
 		{
 			$this->setDeletedDropFolderFileId($this->getId());
 		}
+		if($this->isColumnModified(DropFolderFilePeer::STATUS) 
+		   && in_array($this->getColumnsOldValue(DropFolderFilePeer::STATUS), $errorStatusesArray)
+		   && !in_array($this->getStatus(), $errorStatusesArray))
+		{
+			$this->setErrorCode(null);
+			$this->setErrorDescription(null);
+		}
 		
 		return parent::preUpdate($con);
 	}
