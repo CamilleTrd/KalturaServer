@@ -921,11 +921,12 @@ class playManifestAction extends kalturaAction
 	 */
 	private function getSecureHdUrl()
 	{
+		$flavor = null;
 		if ($this->entry->getType() == entryType::LIVE_STREAM)
 		{
 			$liveStreamConfig = kLiveStreamConfiguration::getSingleItemByPropertyValue($this->entry, 'protocol', PlaybackProtocol::AKAMAI_HDS);
-			$flavor = $this->getFlavorAssetInfo($liveStreamConfig->getUrl());
-			break;
+			if ($liveStreamConfig)
+				$flavor = $this->getFlavorAssetInfo($liveStreamConfig->getUrl());
 			
 			return $flavor;
 		}
