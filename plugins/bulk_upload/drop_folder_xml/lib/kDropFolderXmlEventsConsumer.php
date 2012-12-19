@@ -97,6 +97,8 @@ class kDropFolderXmlEventsConsumer implements kBatchJobStatusEventConsumer, kObj
 	private function onBulkUploadJobStatusUpdated(BatchJob $dbBatchJob)
 	{
 		$xmlDropFolderFile = DropFolderFilePeer::retrieveByPK($dbBatchJob->getObjectId());
+		if(!$xmlDropFolderFile)
+			return;
 		KalturaLog::debug('object id '.$dbBatchJob->getObjectId());
 		switch($dbBatchJob->getStatus())
 		{
