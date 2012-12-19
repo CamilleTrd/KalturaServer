@@ -106,12 +106,13 @@ class KAsyncDropFolderWatcher extends KPeriodicWorker
 		else 
 			$dropFolderFilesMap = array();
 			
-		if($folder->ignoreFileNamePatterns)
+		$ignorePatterns = $folder->ignoreFileNamePatterns;	
+		if($ignorePatterns)
 			$ignorePatterns = self::IGNORE_PATTERNS_DEFAULT_VALUE.','.$ignorePatterns;
 		else
 			$ignorePatterns = self::IGNORE_PATTERNS_DEFAULT_VALUE;			
 		$ignorePatterns = array_map('trim', explode(',', $ignorePatterns));	
-					
+								
 		foreach ($physicalFiles as $physicalFileName) 
 		{	
 			if($this->validatePhysicalFile($folder, $physicalFileName, $ignorePatterns))
