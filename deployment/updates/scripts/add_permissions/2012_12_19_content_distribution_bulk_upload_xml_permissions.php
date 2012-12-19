@@ -9,6 +9,6 @@
  */
 
 $script = realpath(dirname(__FILE__) . '/../../../../') . '/scripts/utils/permissions/addPermissionsAndItems.php';
-$config = realpath(dirname(__FILE__)) . '/../../../../plugins/event_notification/config/event_notifications_permissions_and_items.ini';
+$config = realpath(dirname(__FILE__)) . '/../../../../plugins/bulk_upload/xml/batch/handlers/config/permissions.ini';
 passthru("php $script $config");
 
