@@ -8,6 +8,7 @@ class KalturaEmailNotificationTemplate extends KalturaEventNotificationTemplate
 	/**
 	 * Define the email body format
 	 * @var KalturaEmailNotificationFormat
+	 * @requiresPermission update
 	 */
 	public $format;
 	
@@ -37,32 +38,33 @@ class KalturaEmailNotificationTemplate extends KalturaEventNotificationTemplate
 	
 	/**
 	 * Email recipient emails and names
-	 * @var KalturaEmailNotificationRecipientArray
+	 * @var KalturaEmailNotificationRecipientProvider
 	 */
 	public $to;
 	
 	/**
-	 * Email cc emails and names
-	 * @var KalturaEmailNotificationRecipientArray
+	 * Email recipient emails and names
+	 * @var KalturaEmailNotificationRecipientProvider
 	 */
 	public $cc;
 	
 	/**
-	 * Email bcc emails and names
-	 * @var KalturaEmailNotificationRecipientArray
+	 * Email recipient emails and names
+	 * @var KalturaEmailNotificationRecipientProvider
 	 */
 	public $bcc;
 	
 	/**
-	 * Email addresses that a reading confirmation will be sent to
+	 * Default email addresses to whom the reply should be sent. 
 	 * 
-	 * @var KalturaEmailNotificationRecipientArray
+	 * @var KalturaEmailNotificationRecipientProvider
 	 */
 	public $replyTo;
 	
 	/**
 	 * Define the email priority
 	 * @var KalturaEmailNotificationTemplatePriority
+	 * @requiresPermission update
 	 */
 	public $priority;
 	
@@ -74,10 +76,11 @@ class KalturaEmailNotificationTemplate extends KalturaEventNotificationTemplate
 	public $confirmReadingTo;
 	
 	/**
-	 * Hostname to use in Message-Id and Received headers and as default HELO string. 
+	 * Hostname to use in Message-Id and Received headers and as default HELLO string. 
 	 * If empty, the value returned by SERVER_NAME is used or 'localhost.localdomain'.
 	 * 
 	 * @var string
+	 * @requiresPermission update
 	 */
 	public $hostname;
 	
@@ -86,6 +89,7 @@ class KalturaEmailNotificationTemplate extends KalturaEventNotificationTemplate
 	 * If empty, a unique id will be generated.
 	 * 
 	 * @var string
+	 * @requiresPermission update
 	 */
 	public $messageID;
 	
@@ -93,12 +97,14 @@ class KalturaEmailNotificationTemplate extends KalturaEventNotificationTemplate
 	 * Adds a e-mail custom header
 	 * 
 	 * @var KalturaKeyValueArray
+	 * @requiresPermission update
 	 */
 	public $customHeaders;
 	
 	/**
 	 * Define the content dynamic parameters
-	 * @var KalturaEmailNotificationParameterArray
+	 * @var KalturaEventNotificationParameterArray
+	 * @requiresPermission update
 	 */
 	public $contentParameters;
 	
@@ -151,7 +157,6 @@ class KalturaEmailNotificationTemplate extends KalturaEventNotificationTemplate
 	public function validateForUpdate($sourceObject, $propertiesToSkip = array())
 	{
 		$propertiesToSkip[] = 'type';
-		$this->validatePropertyNotNull('format');
 		return parent::validateForUpdate($sourceObject, $propertiesToSkip);
 	}
 	
@@ -164,5 +169,23 @@ class KalturaEmailNotificationTemplate extends KalturaEventNotificationTemplate
 			$dbObject = new EmailNotificationTemplate();
 			
 		return parent::toObject($dbObject, $propertiesToSkip);
+	}
+	
+	/* (non-PHPdoc)
+	 * @see KalturaObject::fromObject($source_object)
+	 */
+	public function fromObject($dbObject)
+	{
+		/* @var $dbObject EmailNotificationTemplate */
+		parent::fromObject($dbObject);
+		
+		if($dbObject->getTo())
+			$this->to = KalturaEmailNotificationRecipientProvider::getProviderInstance($dbObject->getTo());
+		if($dbObject->getCc())
+			$this->cc = KalturaEmailNotificationRecipientProvider::getProviderInstance($dbObject->getCc());
+		if($dbObject->getBcc())
+			$this->bcc = KalturaEmailNotificationRecipientProvider::getProviderInstance($dbObject->getBcc());
+		if($dbObject->getReplyTo())
+			$this->replyTo = KalturaEmailNotificationRecipientProvider::getProviderInstance($dbObject->getReplyTo());
 	}
 }
