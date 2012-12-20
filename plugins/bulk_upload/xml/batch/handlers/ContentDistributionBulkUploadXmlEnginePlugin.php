@@ -107,9 +107,12 @@ class ContentDistributionBulkUploadXmlEnginePlugin extends KalturaPlugin impleme
 			
 		if(empty($item->distributions))
 			return;
-			
+
+		$this->xmlBulkUploadEngine->impersonate();
 		foreach($item->distributions->distribution as $distribution)
 			$this->handleDistribution($object->id, $distribution);
+			
+		$this->xmlBulkUploadEngine->unimpersonate();
 	}
 	
 	protected function handleDistribution($entryId, SimpleXMLElement $distribution)
