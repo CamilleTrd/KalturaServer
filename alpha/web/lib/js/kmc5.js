@@ -677,7 +677,7 @@ kmc.preview_embed = {
 		id_type = is_playlist ? "Playlist " + (id == "multitab_playlist" ? "Name" : "ID") : "Embedding",
 		uiconf_details = kmc.preview_embed.getUiconfDetails(uiconf_id,is_playlist);
 
-		if( live_bitrates ) {kmc.vars.last_delivery_type = "auto";} // Reset delivery type to http
+		if( live_bitrates ) {kmc.vars.last_delivery_type = "http";} // Reset delivery type to http
 
 		embed_code = kmc.preview_embed.buildKalturaEmbed(id, name, description, is_playlist, uiconf_id, true);
 		preview_player = embed_code.replace('{FLAVOR}','ks=' + kmc.vars.ks + '&');
@@ -791,6 +791,10 @@ kmc.preview_embed = {
 		var validArray = [];
 
 		$.each(kmc.vars.DeliveryTypeStorage, function() {
+			if( this.id == 'hds' || this.id == 'auto' ) {
+				clearLastDeliveryType(this.id);
+				return true;
+			}
 			if( (this.id == 'akamai' || this.id == 'akamai_v2' ) && kmc.vars.hide_akamai_hd_network ) {
 				clearLastDeliveryType(this.id);
 				return true;
