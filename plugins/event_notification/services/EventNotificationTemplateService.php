@@ -47,9 +47,12 @@ class EventNotificationTemplateService extends KalturaBaseService
 	 * @action clone
 	 * @param int $id source template to clone
 	 * @param KalturaEventNotificationTemplate $eventNotificationTemplate overwrite configuration object
+	 * @throws KalturaEventNotificationErrors::EVENT_NOTIFICATION_TEMPLATE_NOT_FOUND
+	 * @throws KalturaEventNotificationErrors::EVENT_NOTIFICATION_WRONG_TYPE
+	 * @throws KalturaEventNotificationErrors::EVENT_NOTIFICATION_TEMPLATE_DUPLICATE_SYSTEM_NAME
 	 * @return KalturaEventNotificationTemplate
 	 */
-	public function cloneAction($id, KalturaEventNotificationTemplate $eventNotificationTemplate)
+	public function cloneAction($id, KalturaEventNotificationTemplate $eventNotificationTemplate = null)
 	{
 		// get the source object
 		$dbEventNotificationTemplate = EventNotificationTemplatePeer::retrieveByPK($id);
@@ -61,10 +64,19 @@ class EventNotificationTemplateService extends KalturaBaseService
 		
 		// init new Kaltura object
 		$newEventNotificationTemplate = KalturaEventNotificationTemplate::getInstanceByType($newDbEventNotificationTemplate->getType());
-		$newEventNotificationTemplate->fromObject($newDbEventNotificationTemplate);
+		$templateClass = get_class($newEventNotificationTemplate);
+		if(get_class($eventNotificationTemplate) != $templateClass && !is_subclass_of($eventNotificationTemplate, $templateClass))
+			throw new KalturaAPIException(KalturaEventNotificationErrors::EVENT_NOTIFICATION_WRONG_TYPE, $id, kPluginableEnumsManager::coreToApi('EventNotificationTemplateType', $dbEventNotificationTemplate->getType()));
 		
-		// update new db object with the overwrite configuration
-		$newDbEventNotificationTemplate = $newEventNotificationTemplate->toInsertableObject($newDbEventNotificationTemplate);
+		if ($eventNotificationTemplate)
+		{
+			// update new db object with the overwrite configuration
+			$newDbEventNotificationTemplate = $eventNotificationTemplate->toUpdatableObject($newDbEventNotificationTemplate);
+		}
+		//Check uniqueness of new object's system name
+		$systemNameTemplates = EventNotificationTemplatePeer::retrieveBySystemName($newDbEventNotificationTemplate->getSystemName());
+		if (count($systemNameTemplates))
+			throw new KalturaAPIException(KalturaEventNotificationErrors::EVENT_NOTIFICATION_TEMPLATE_DUPLICATE_SYSTEM_NAME, $newDbEventNotificationTemplate->getSystemName());
 		
 		// save the new db object
 		$newDbEventNotificationTemplate->setPartnerId($this->getPartnerId());
@@ -159,7 +171,6 @@ class EventNotificationTemplateService extends KalturaBaseService
 	 * 
 	 * @action delete
 	 * @param int $id 
-	 * @return KalturaEventNotificationTemplate
 	 *
 	 * @throws KalturaEventNotificationErrors::EVENT_NOTIFICATION_TEMPLATE_NOT_FOUND
 	 */		
@@ -173,11 +184,6 @@ class EventNotificationTemplateService extends KalturaBaseService
 		// set the object status to deleted
 		$dbEventNotificationTemplate->setStatus(EventNotificationTemplateStatus::DELETED);
 		$dbEventNotificationTemplate->save();
-			
-		// return the saved object
-		$eventNotificationTemplate = KalturaEventNotificationTemplate::getInstanceByType($dbEventNotificationTemplate->getType());
-		$eventNotificationTemplate->fromObject($dbEventNotificationTemplate);
-		return $eventNotificationTemplate;
 	}
 	
 	/**
@@ -265,9 +271,10 @@ class EventNotificationTemplateService extends KalturaBaseService
 	 * @action dispatch
 	 * @param int $id 
 	 * @param KalturaEventNotificationDispatchJobData $jobData 
-	 * @return int
-	 * 
 	 * @throws KalturaEventNotificationErrors::EVENT_NOTIFICATION_TEMPLATE_NOT_FOUND
+	 * @throws KalturaEventNotificationErrors::EVENT_NOTIFICATION_DISPATCH_DISABLED
+	 * @throws KalturaEventNotificationErrors::EVENT_NOTIFICATION_DISPATCH_FAILED
+	 * @return int
 	 */		
 	public function dispatchAction($id, KalturaEventNotificationDispatchJobData $data)
 	{
@@ -285,5 +292,56 @@ class EventNotificationTemplateService extends KalturaBaseService
 			throw new KalturaAPIException(KalturaEventNotificationErrors::EVENT_NOTIFICATION_DISPATCH_FAILED, $id);
 			
 		return $job->getId();
+	}
+	
+	/* (non-PHPdoc)
+	 * @see KalturaBaseService::partnerGroup()
+	 */
+	protected function partnerGroup()
+	{
+		
+		switch ($this->actionName)
+		{
+			case 'clone':
+				return $this->partnerGroup . ',0';
+			case 'listTemplates':
+				return '0';
+		}
+			
+		return $this->partnerGroup;
+	}
+	
+	/**
+	 * Action lists the template partner event notification templates.
+	 * @action listTemplates
+	 * 
+	 * @param KalturaEventNotificationTemplateFilter $filter
+	 * @param KalturaFilterPager $pager
+	 * @return KalturaEventNotificationTemplateListResponse
+	 */
+	public function listTemplatesAction (KalturaEventNotificationTemplateFilter $filter = null, KalturaFilterPager $pager = null)
+	{
+		if (!$filter)
+			$filter = new KalturaEventNotificationTemplateFilter();
+			
+		if (!$pager)
+			$pager = new KalturaFilterPager();
+		
+		$coreFilter = new EventNotificationTemplateFilter();
+		$filter->toObject($coreFilter);
+		
+		$criteria = new Criteria();
+		$coreFilter->attachToCriteria($criteria);
+		$criteria->add(EventNotificationTemplatePeer::PARTNER_ID, PartnerPeer::GLOBAL_PARTNER);
+		$count = EventNotificationTemplatePeer::doCount($criteria);
+		
+		$pager->attachToCriteria($criteria);
+		$results = EventNotificationTemplatePeer::doSelect($criteria);
+		
+		$response = new KalturaEventNotificationTemplateListResponse();
+		$response->objects = KalturaEventNotificationTemplateArray::fromDbArray($results);
+		$response->totalCount = $count;
+		
+		return $response;
 	}
 }
