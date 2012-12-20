@@ -63,6 +63,7 @@ class DropFolderFile extends BaseDropFolderFile
 	 */
 	public function preUpdate(PropelPDO $con = null)
 	{
+		$errorStatusesArray = array(DropFolderFileStatus::ERROR_DELETING, DropFolderFileStatus::ERROR_DOWNLOADING, DropFolderFileStatus::ERROR_HANDLING);
 		if($this->isColumnModified(DropFolderFilePeer::STATUS) && $this->getStatus() == DropFolderFileStatus::PURGED)
 		{
 			$this->setDeletedDropFolderFileId($this->getId());
