@@ -21,16 +21,19 @@ class KalturaEventNotificationTemplate extends KalturaObject implements IFiltera
 	
 	/**
 	 * @var string
+	 * @requiresPermission update
 	 */
 	public $name;
 	
 	/**
 	 * @var string
+	 * @requiresPermission update
 	 */
 	public $systemName;
 	
 	/**
 	 * @var string
+	 * @requiresPermission update
 	 */
 	public $description;
 	
@@ -82,6 +85,7 @@ class KalturaEventNotificationTemplate extends KalturaObject implements IFiltera
 	 * Define the event that should trigger this notification
 	 * 
 	 * @var KalturaEventNotificationEventType
+	 * @requiresPermission update
 	 */
 	public $eventType;
 
@@ -89,12 +93,14 @@ class KalturaEventNotificationTemplate extends KalturaObject implements IFiltera
 	 * Define the object that raied the event that should trigger this notification
 	 * 
 	 * @var KalturaEventNotificationEventObjectType
+	 * @requiresPermission update
 	 */
 	public $eventObjectType;
 
 	/**
 	 * Define the conditions that cause this notification to be triggered
 	 * @var KalturaEventConditionArray
+	 * @requiresPermission update
 	 */
 	public $eventConditions;
 	
@@ -131,7 +137,7 @@ class KalturaEventNotificationTemplate extends KalturaObject implements IFiltera
 	public function validateForInsert($propertiesToSkip = array())
 	{
 		$this->validatePropertyMinLength('name', 3, false);
-		$this->validatePropertyMinLength('systemName', 3, true);
+		$this->validate();
 		
 		return parent::validateForInsert($propertiesToSkip);
 	}
@@ -141,8 +147,8 @@ class KalturaEventNotificationTemplate extends KalturaObject implements IFiltera
 	 */
 	public function validateForUpdate($sourceObject, $propertiesToSkip = array())
 	{
-		$this->validatePropertyMinLength('name', 3, false);
-		$this->validatePropertyMinLength('systemName', 3, true);
+		$this->validatePropertyMinLength('name', 3, true);
+		$this->validate($sourceObject);
 		
 		return parent::validateForUpdate($sourceObject, $propertiesToSkip);
 	}
@@ -181,5 +187,21 @@ class KalturaEventNotificationTemplate extends KalturaObject implements IFiltera
 	public static function getInstanceByType($type)
 	{
 		return KalturaPluginManager::loadObject('KalturaEventNotificationTemplate', $type);
+	}
+	
+	protected function validate (EventNotificationTemplate $sourceObject = null)
+	{
+		$this->validatePropertyMinLength('systemName', 3, true);
+		
+		$id = null;
+		if($sourceObject)
+			$id = $sourceObject->getId();
+			
+		if(trim($this->systemName) && !$this->isNull('systemName'))
+		{
+			$systemNameTemplates = EventNotificationTemplatePeer::retrieveBySystemName($this->systemName, $id);
+	        if (count($systemNameTemplates))
+	            throw new KalturaAPIException(KalturaEventNotificationErrors::EVENT_NOTIFICATION_TEMPLATE_DUPLICATE_SYSTEM_NAME, $this->systemName);
+		}
 	}
 }
