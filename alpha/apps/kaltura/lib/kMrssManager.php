@@ -446,10 +446,6 @@ class kMrssManager
 			$mrss = new SimpleXMLElement('<item/>');
 		}
 		
-		$featuresArr = array();
-		if ($features)
-			$featuresArr = explode(',', $features);
-		
 		$mrss->addChild('entryId', $entry->getId());
 		if($entry->getReferenceID())
 			$mrss->addChild('referenceID', $entry->getReferenceID());
@@ -547,7 +543,7 @@ class kMrssManager
 			{
 				try
 				{
-					if (!count($featuresArr) || in_array($mrssContributor->getObjectFeatureType(), $featuresArr))
+					if (!count($features) || in_array($mrssContributor->getObjectFeatureType(), $features))
 						$mrssContributor->contribute($entry, $mrss, $mrssParams);
 				}
 				catch(kCoreException $ex)
@@ -591,20 +587,21 @@ class kMrssManager
 	protected static function addExtendingItemNode (BaseObject $object, $identifierValue, SimpleXMLElement $mrss, $nodeName = null, kMrssParameters $mrssParams = null, $features = null)
 	{
 		$featuresArr = explode(",", $features);
-		switch (get_class($object))
+		if ($object instanceof category)
 		{
-			case 'category':
-				$categoryItem = $mrss->addChild("category_item");
-				$categoryItem->addAttribute('identifier', $identifierValue);
-				return self::getCategoryMrssXml($object, $categoryItem , $mrssParams, $features);
-			case 'entry':
-				if (!$nodeName)
-				{
-					$nodeName = 'entry';
-				}
-				$newNode = $mrss->addChild("{$nodeName}_item");
-				$newNode->addAttribute('identifier', $identifierValue);
-				return self::getEntryMrssXml($object, $newNode, $mrssParams, $features);
+			$categoryItem = $mrss->addChild("category_item");
+			$categoryItem->addAttribute('identifier', $identifierValue);
+			return self::getCategoryMrssXml($object, $categoryItem , $mrssParams, $features);
+		}
+		if ($object instanceof entry)
+		{
+			if (!$nodeName)
+			{
+				$nodeName = 'entry';
+			}
+			$newNode = $mrss->addChild("{$nodeName}_item");
+			$newNode->addAttribute('identifier', $identifierValue);
+			return self::getEntryMrssXml($object, $newNode, $mrssParams, $features);
 		}
 		
 	}
@@ -628,13 +625,7 @@ class kMrssManager
 			$mrss = new SimpleXMLElement('<item/>');
 		}
 		
-		$featuresArr = array();
-		if (!is_null($features))
-		{
-			$featuresArr = explode(",", $features);
-		}
-		
-		if (!$features || in_array(ObjectFeatureType::METADATA, $featuresArr))
+		if (!$features || in_array(ObjectFeatureType::METADATA, $features))
 		{
 			$mrss->addChild("id", $category->getId());
 			$mrss->addChild("name", $category->getName());
@@ -650,7 +641,7 @@ class kMrssManager
 				/* @var $mrssContributor IKalturaMrssContributor */
 				try 
 				{
-					if (!$features || in_array($mrssContributor->getObjectFeatureType(), $featuresArr))
+					if (!$features || in_array($mrssContributor->getObjectFeatureType(), $features))
 						$mrssContributor->contribute($category, $mrss, $mrssParams);
 				}
 				catch(kCoreException $ex)
@@ -660,18 +651,17 @@ class kMrssManager
 			}
 		}
 		
-		if (in_array(ObjectFeatureType::ANCESTOR_RECURSIVE, $featuresArr))
+		if (in_array(ObjectFeatureType::ANCESTOR_RECURSIVE, $features))
 		{
 			$ancestorIds = explode(">", $category->getFullIds());
 			$ancestorCategories = categoryPeer::retrieveByPKs($ancestorIds);
 			array_pop($ancestorCategories);
 			//find and delete the ANCESTOR_RECURSIVE from the features array
-			for ($i = 0; $i < count($featuresArr); $i++)
+			for ($i = 0; $i < count($features); $i++)
 			{
-				if ($featuresArr[$i] == ObjectFeatureType::ANCESTOR_RECURSIVE)
-					unset($featuresArr[$i]);
+				if ($features[$i] == ObjectFeatureType::ANCESTOR_RECURSIVE)
+					unset($features[$i]);
 			}
-			$features = implode(",", $featuresArr);
 			//retrieve mrss for each ancestor category
 			$parentCategories = $mrss->addChild('parent_categories');
 			foreach ($ancestorCategories as $ancestorCategory )
