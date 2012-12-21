@@ -49,7 +49,7 @@ class DropFolderXmlBulkUploadEngine extends BulkUploadEngineXml
 		$dropFolderPlugin->dropFolder->get($dropFolderFile->dropFolderId);
 		list($this->xmlDropFolderFile, $this->dropFolder) = $this->kClient->doMultiRequest(); 
 				
-		$this->physicalFileUtils = new KPhysicalDropFolderUtils($this->dropFolder);
+		$this->physicalFileUtils = new KPhysicalDropFolderUtils($this->dropFolder, array('useCmd' => false));
 		$this->data->filePath = $this->physicalFileUtils->getLocalFilePath($this->xmlDropFolderFile->fileName, $this->xmlDropFolderFile->id);
 		$this->setContentResourceFilesMap($dropFolderPlugin);
 		$this->unimpersonate();

@@ -17,10 +17,10 @@ class KPhysicalDropFolderUtils
 	 */
 	private $tempDirectory = null;
 	
-	public function __construct(KalturaDropFolder $folder)
+	public function __construct(KalturaDropFolder $folder, $options = null)
 	{
 		$this->folder = $folder;
-		$this->fileTransferMgr = self::getFileTransferManager($folder);
+		$this->fileTransferMgr = self::getFileTransferManager($folder, $options);
 	}
 		
 	public function getLocalFilePath($fileName, $fileId)
@@ -58,9 +58,9 @@ class KPhysicalDropFolderUtils
      * 
      * @return kFileTransferMgr
      */
-	private static function getFileTransferManager(KalturaDropFolder $folder)
+	private static function getFileTransferManager(KalturaDropFolder $folder, $options)
 	{
-	    $fileTransferMgr = kFileTransferMgr::getInstance(self::getFileTransferMgrType($folder->type)); //TODO migrate types
+	    $fileTransferMgr = kFileTransferMgr::getInstance(self::getFileTransferMgrType($folder->type), $options);
 	    
 	    $host =null; $username=null; $password=null; $port=null;
 	    $privateKey = null; $publicKey = null;
