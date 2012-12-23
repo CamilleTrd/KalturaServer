@@ -51,13 +51,13 @@ if( count($allowedPartners) > 1 ) {
 			embed_code_protocol_https: <?php echo ($useEmbedCodeProtocolHttps) ? "true" : "false"; ?>,
 			default_embed_code_type: 'auto',
 			has_v2_flavors: <?php echo ($v2Flavors) ? "true" : "false"; ?>,
-			<?php if($v2Flavors) { ?>default_delivery_type: 'akamai_v2',<?php } ?>
+			<?php if($v2Flavors) { ?>default_delivery_type: 'hds',<?php } ?>
 			kcw_webcam_uiconf : "<?php echo $content_uiconfs_upload_webcam->getId(); ?>",
 			kcw_import_uiconf : "<?php echo $content_uiconfs_upload_import->getId(); ?>",
 			default_kdp		: {
+					id	: "<?php echo $content_uiconfs_flavorpreview->getId(); ?>",				
 					height		: "<?php echo $content_uiconfs_flavorpreview->getHeight(); ?>",
 					width		: "<?php echo $content_uiconfs_flavorpreview->getWidth(); ?>",
-					uiconf_id	: "<?php echo $content_uiconfs_flavorpreview->getId(); ?>",
 					swf_version	: "<?php echo $content_uiconfs_flavorpreview->getswfUrlVersion(); ?>"
 			},
 			clipapp : {

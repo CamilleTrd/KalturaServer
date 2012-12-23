@@ -70,22 +70,14 @@ kmc.vars.DeliveryTypeStorage = [
 		}
 	},
 	{
-		id: 'akamai_v2',
-		label: 'HTTP Streaming (Akamai)',
+		id: 'hds',
+		label: 'HTTP Streaming (HDS)',
 		flashvars: {
 			"streamerType": "hdnetwork",
 			"akamaiHD.loadingPolicy": "preInitialize",
 			"akamaiHD.asyncInit": "true",
 			"twoPhaseManifest": "true"
 		}
-	},			
-	{
-		id: 'hds',
-		label: 'HTTP Streaming (HDS)',
-		flashvars: {
-			"streamerType": "hds"
-		},
-		minVersion: 'v3.6.14'
 	},
 	{
 		id: 'rtmp',
@@ -791,11 +783,11 @@ kmc.preview_embed = {
 		var validArray = [];
 
 		$.each(kmc.vars.DeliveryTypeStorage, function() {
-			if( this.id == 'hds' || this.id == 'auto' ) {
+			if( this.id == 'auto' ) {
 				clearLastDeliveryType(this.id);
 				return true;
 			}
-			if( (this.id == 'akamai' || this.id == 'akamai_v2' ) && kmc.vars.hide_akamai_hd_network ) {
+			if( (this.id == 'akamai' || this.id == 'hds' ) && kmc.vars.hide_akamai_hd_network ) {
 				clearLastDeliveryType(this.id);
 				return true;
 			}
@@ -803,7 +795,7 @@ kmc.preview_embed = {
 				clearLastDeliveryType(this.id);
 				return true;
 			}
-			if( this.id == 'akamai_v2' && ! kmc.vars.has_v2_flavors ) {
+			if( this.id == 'hds' && ! kmc.vars.has_v2_flavors ) {
 				clearLastDeliveryType(this.id);
 				return true;
 			}
@@ -849,6 +841,10 @@ kmc.preview_embed = {
 		};
 		// Go over embed code types
 		$.each(kmc.vars.EmbedCodeStorage, function(){
+			if( this.id == 'thumb' ) {
+				clearLastEmbedType(this.id);
+				return true;
+			}
 			// Don't add embed code that are entry only for playlists
 			if(is_playlist && this.entryOnly) {
 				clearLastEmbedType(this.id);
@@ -1211,8 +1207,9 @@ kmc.preview_embed = {
 };
 
 kmc.client = {
+	counter: 0,
 	makeRequest: function( service, action, params, callback ) {
-		var serviceUrl = kmc.vars.api_url + '/api_v3/index.php?service='+service+'&action='+action;
+		var serviceUrl = kmc.vars.base_url + '/api_v3/index.php?service='+service+'&action='+action;
 		var defaultParams = {
 			"ks"		: kmc.vars.ks,
 			"format"	: 1			
@@ -1247,7 +1244,7 @@ kmc.client = {
 		
 		var kalsig = getSignature( params );
 		serviceUrl += '&kalsig=' + kalsig;
-	
+
 		// Make request
 		$.ajax({
 			type: 'POST',
@@ -1272,7 +1269,7 @@ kmc.client = {
 		};
 		
 		kmc.client.makeRequest("shortlink_shortlink", "list", filter, function( res ) {
-			if(res.totalCount == 0) {
+			if(res && res.totalCount == 0) {
 				// if no url were found, create a new one
 				kmc.client.createShortURL(url);
 			} else {
