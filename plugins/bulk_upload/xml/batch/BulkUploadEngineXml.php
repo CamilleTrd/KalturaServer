@@ -170,7 +170,7 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 			return $xdoc;
 		
 		libxml_clear_errors();
-		$xml = new KDOMDocument();
+		$xml = new DOMDocument();
 		if(!$xml->loadXML($xdoc)){
 			KalturaLog::debug("Could not load xml");
 			$errorMessage = kXml::getLibXmlErrorDescription($xdoc);
@@ -179,7 +179,7 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		
 		libxml_clear_errors();
 		$proc = new XSLTProcessor;
-		$xsl = new KDOMDocument();
+		$xsl = new DOMDocument();
 		if(!$xsl->loadXML($this->conversionProfileXsl)){
 			KalturaLog::debug("Could not load xsl".$this->conversionProfileXsl);
 			$errorMessage = kXml::getLibXmlErrorDescription($this->conversionProfileXsl);
@@ -715,13 +715,8 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		
 		if(is_array($requestResults))
 			foreach($requestResults as $requestResult)
-			{
-				if(is_array($requestResult) && isset($requestResult['code']))
-					throw new KalturaException($requestResult['message'], $requestResult['code']);
-				
 				if($requestResult instanceof Exception)
 					throw $requestResult;
-			}
 		
 		return $updatedEntry;
 	}
@@ -934,13 +929,8 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		$this->unimpersonate();
 		
 		foreach($requestResults as $requestResult)
-		{
-			if(is_array($requestResult) && isset($requestResult['code']))
-				throw new KalturaException($requestResult['message'], $requestResult['code']);
-			
 			if($requestResult instanceof Exception)
 				throw $requestResult;
-		}
 		
 		$createdEntry = reset($requestResults);
 		if(is_null($createdEntry)) //checks that the entry was created
@@ -967,13 +957,8 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		$result = $this->kClient->doMultiRequest();
 		
 		foreach($result as $requestResult)
-		{
-			if(is_array($requestResult) && isset($requestResult['code']))
-				throw new KalturaException($requestResult['message'], $requestResult['code']);
-			
 			if($requestResult instanceof Exception)
 				throw $requestResult;
-		}
 		
 		$createdFlavorAssets = $result[0]; 
 		$createdThumbAssets =  $result[1];
@@ -1009,13 +994,8 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 
 		if(is_array($requestResults))
 			foreach($requestResults as $requestResult)
-			{
-				if(is_array($requestResult) && isset($requestResult['code']))
-					throw new KalturaException($requestResult['message'], $requestResult['code']);
-				
 				if($requestResult instanceof Exception)
 					throw $requestResult;
-			}
 		
 		return $requestResults;
 	}
@@ -1041,13 +1021,8 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		$result = $this->kClient->doMultiRequest();
 		
 		foreach($result as $requestResult)
-		{
-			if(is_array($requestResult) && isset($requestResult['code']))
-				throw new KalturaException($requestResult['message'], $requestResult['code']);
-			
 			if($requestResult instanceof Exception)
 				throw $requestResult;
-		}
 		
 		$createdFlavorAssets = $result[0]; 
 		$createdThumbAssets =  $result[1];
@@ -1102,13 +1077,7 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 		return $updatedEntry;
 	}
 	
-	/**
-	 * @param string $entryId
-	 * @param string $categories comma seperated categoy full names.
-	 * @param KalturaBulkUploadResultEntry $bulkuploadResult
-	 * @param bool $update indicates that we are in update state and old categories that no in the list should be removed.
-	 */
-	protected function createCategoryAssociations($entryId, $categories, KalturaBulkUploadResultEntry $bulkuploadResult, $update = false)
+	private function createCategoryAssociations ($entryId, $categories, KalturaBulkUploadResultEntry $bulkuploadResult, $update = false)
 	{
 		// no change requested
 		if(is_null($categories))
@@ -1161,22 +1130,20 @@ class BulkUploadEngineXml extends KBulkUploadEngine
 				}
 				
 				$categoryNamesArr = explode(',', $categories);
-				
+				$this->kClient->startMultiRequest();
 				foreach($categoryNamesArr as $categoryName)
 				{
-					if(!in_array($categoryName, $existingCategoryNames)) //Category does not exis 
+					if(in_array($categoryName, $existingCategoryNames)) //Category does not exis 
 					{
 						KalturaLog::debug("Creating a new category by the name [$categoryName]");
-						$createdCategories[] = $this->createCategoryByPath($categoryName);
+						$this->createCategoryByPath($categoryName);
 					}
 				}
-				
-				if ($createdCategories) {
-					foreach($createdCategories as $createdCategory)
-					{
-						/* @var $createdCategory KalturaCategory */
-						$requiredCategoryIds[] = $createdCategory->id; //Adding the newly created category IDs to the ToWork list
-					}
+				$createdCategories = $this->kClient->doMultiRequest();
+				foreach($createdCategories as $createdCategory)
+				{
+					/* @var $createdCategory KalturaCategory */
+					$requiredCategoryIds[] = $createdCategory->id; //Adding the newly created category IDs to the ToWork list
 				}
 			}
 			
@@ -1239,7 +1206,6 @@ class BulkUploadEngineXml extends KBulkUploadEngine
             {
                 if ($e->getCode() == DUPLICATE_CATEGORY)
                 {
-                	KalturaLog::debug("Categroy [$fullNameEq] already exist");
                     $catFilter = new KalturaCategoryFilter();
                     $catFilter->fullNameEqual = $fullNameEq;
                     $res = $this->kClient->category->listAction($catFilter);
@@ -1247,7 +1213,7 @@ class BulkUploadEngineXml extends KBulkUploadEngine
                 }
                 else
                 {
-                    throw $e;
+                    return $e->getMessage();
                 }
             }
             
