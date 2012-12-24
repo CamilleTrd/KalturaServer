@@ -31,7 +31,7 @@ class KalturaCategoryUser extends KalturaObject implements IFilterable {
 	
 	/**
 	 * Permission level
-	 * 
+	 * @deprecated
 	 * @var KalturaCategoryUserPermissionLevel
 	 * @filter eq,in
 	 */
@@ -81,6 +81,13 @@ class KalturaCategoryUser extends KalturaObject implements IFilterable {
 	 */
 	public $categoryFullIds;
 	
+	/**
+	 * Set of category-related permissions for the current category user.
+	 * @var string
+	 * @filter matchand,matchor
+	 */
+	public $permissionNames;
+	
 	private static $mapBetweenObjects = array
 	(
 		"categoryId",
@@ -92,14 +99,54 @@ class KalturaCategoryUser extends KalturaObject implements IFilterable {
 		"updatedAt",
 		"updateMethod",
 		"categoryFullIds",
+		"permissionNames",
 	);
 	
+	/* (non-PHPdoc)
+	 * @see KalturaObject::toObject($object_to_fill, $props_to_skip)
+	 */
 	public function toObject($dbObject = null, $skip = array()) {
 	    
 		if (is_null ( $dbObject ))
 			$dbObject = new categoryKuser ();
-		
+		/* @var $dbObject categoryKuser */
 		parent::toObject ( $dbObject, $skip );
+		if (!is_null($dbObject->getPermissionLevel()))
+		{
+			$permissionNames = $dbObject->getPermissionNames();
+			if ($permissionNames)
+			{
+				$permissionNamesArr = explode(',', $permissionNames);
+				$permissionNamesArr = categoryKuser::removeCategoryPermissions($permissionNamesArr);
+			}
+			else 
+			{
+				$permissionNamesArr = array();
+			}
+			switch ($dbObject->getPermissionLevel())
+			{
+				case CategoryKuserPermissionLevel::MEMBER:
+					$permissionNamesArr[] = PermissionName::CATEGORY_VIEW;
+					break;
+				case CategoryKuserPermissionLevel::CONTRIBUTOR:
+					$permissionNamesArr[] = PermissionName::CATEGORY_CONTRIBUTE;
+					$permissionNamesArr[] = PermissionName::CATEGORY_VIEW;
+					break;
+				case CategoryKuserPermissionLevel::MANAGER:
+					$permissionNamesArr[] = PermissionName::CATEGORY_EDIT;
+					$permissionNamesArr[] = PermissionName::CATEGORY_MODERATE;
+					$permissionNamesArr[] = PermissionName::CATEGORY_CONTRIBUTE;
+					$permissionNamesArr[] = PermissionName::CATEGORY_VIEW;
+					break;
+				case CategoryKuserPermissionLevel::MODERATOR:
+					$permissionNamesArr[] = PermissionName::CATEGORY_MODERATE;
+					$permissionNamesArr[] = PermissionName::CATEGORY_VIEW;
+					break;
+			}
+			$permissionNamesArr[] = PermissionName::CATEGORY_SUBSCRIBE;
+			
+			$dbObject->setPermissionNames(implode(',', $permissionNamesArr));
+		}
 		
 		return $dbObject;
 	}
