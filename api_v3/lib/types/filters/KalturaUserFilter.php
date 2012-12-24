@@ -12,6 +12,10 @@ class KalturaUserFilter extends KalturaUserBaseFilter
 		'firstNameOrLastNameStartsWith' => "_likex_first_name_or_last_name",
 		"idEqual" => "_eq_puser_id",
 		"idIn" => "_in_puser_id",
+		"roleIdsEqual"	=> "_eq_role_ids",
+		"roleIdsIn"	=>	"_in_role_ids",
+		"permissionNamesMultiLikeAnd" => "_mlikeand_permission_names",
+		"permissionNamesMultiLikeOr" => "_mlikeor_permission_names",
 	);
 
 	private $order_by_map = array
@@ -88,7 +92,28 @@ class KalturaUserFilter extends KalturaUserBaseFilter
 	/**
 	 * @var string
 	 */
+	public $roleIdsEqual;
+	
+	/**
+	 * @var string
+	 */
+	public $roleIdsIn;
+	
+	/**
+	 * @var string
+	 */
 	public $firstNameOrLastNameStartsWith;
 	
+	/**
+	 * Permission names filter expression
+	 * @var string
+	 */
+	public $permissionNamesMultiLikeOr;
+	
+	/**
+	 * Permission names filter expression
+	 * @var string
+	 */
+	public $permissionNamesMultiLikeAnd;
 	
 }
