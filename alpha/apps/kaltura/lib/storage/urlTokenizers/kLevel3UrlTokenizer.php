@@ -121,11 +121,11 @@ class kLevel3UrlTokenizer extends kUrlTokenizer
 			$fullUrl = rtrim($baseUrl, '/').'/'.$fullUrl;
 		}
 
-		if ($this->includeExtension && $fileExtension)
+		if ($this->includeExtension && $fileExtension == 'flv')
 		{
-			$fullUrl .= '.' . $fileExtension;
+			$fullUrl .= ".$fileExtension";
 		}
-
+		
 		if ($this->window)
 		{
 			$expiry = "{$this->expiryName}=" . strftime("%Y%m%d%H%M%S", time() - date("Z") + $this->window);
