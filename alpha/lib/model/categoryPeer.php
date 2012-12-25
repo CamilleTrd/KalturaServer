@@ -406,6 +406,10 @@ class categoryPeer extends BasecategoryPeer
 	 */
 	public static function retrieveByPK($pk, PropelPDO $con = null)
 	{
+		if (!strlen(trim(($pk)))){
+        	return null;
+        }
+				
 		if (null !== ($obj = categoryPeer::getInstanceFromPool((string) $pk))) {
 			return $obj;
 		}
@@ -414,7 +418,7 @@ class categoryPeer extends BasecategoryPeer
 		$criteria->add(categoryPeer::ID, $pk);
 
 		$v = categoryPeer::doSelect($criteria, $con);
-
+ 
 		return !empty($v) > 0 ? $v[0] : null;
 	}
 	
