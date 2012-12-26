@@ -688,7 +688,8 @@ class BaseEntryService extends KalturaEntryService
 			throw new KalturaAPIException(KalturaErrors::ENTRY_ID_NOT_FOUND, $entryId);
 			
 		$ks = $this->getKs();
-		$isAdmin = false; 
+		$isAdmin = false;
+		$isSecured = false; // access control or entitlement enabled
 		if($ks)
 			$isAdmin = $ks->isAdmin();
 			
@@ -706,6 +707,7 @@ class BaseEntryService extends KalturaEntryService
 
 		if ($accessControl && $accessControl->hasRules())
 		{
+			$isSecured = true;
 			$disableCache = true;
 			if (kConf::hasMap("optimized_playback"))
 			{
@@ -793,29 +795,46 @@ class BaseEntryService extends KalturaEntryService
 		{
 			$result->streamerType = $contextDataParams->streamerType;
 			$result->mediaProtocol = $contextDataParams->mediaProtocol ? $contextDataParams->mediaProtocol : $contextDataParams->streamerType;
+			return $result;
 		}
-		else
+		
+		if ($dbEntry->getType() == entryType::LIVE_STREAM)
 		{
-			if ($dbEntry->getType() == entryType::LIVE_STREAM)
-			{
-				$config = kLiveStreamConfiguration::getSingleItemByPropertyValue($dbEntry, 'protocol', PlaybackProtocol::AKAMAI_HDS);
-				if ($config)	
-					$result->streamerType = KalturaPlaybackProtocol::AKAMAI_HDS;
+			$config = kLiveStreamConfiguration::getSingleItemByPropertyValue($dbEntry, 'protocol', PlaybackProtocol::AKAMAI_HDS);
+			if ($config)	
+				$result->streamerType = KalturaPlaybackProtocol::AKAMAI_HDS;
 
+			
+			if (!$result->streamerType)
+				$result->streamerType = KalturaPlaybackProtocol::RTMP;
 				
-				if (!$result->streamerType)
-					$result->streamerType = KalturaPlaybackProtocol::RTMP;
-			}
-			else 
-			{
-				$result->streamerType = $this->getPartner()->getStreamerType();
-				if (!$result->streamerType)
-					$result->streamerType = PlaybackProtocol::HTTP;
-				$result->mediaProtocol = $this->getPartner()->getMediaProtocol();
-				if (!$result->mediaProtocol)
-					$result->mediaProtocol = PlaybackProtocol::HTTP;
-			}
-		}		
+			return $result;
+		}
+		
+		$isSecured = $isSecured || PermissionPeer::isValidForPartner(PermissionName::FEATURE_ENTITLEMENT, $dbEntry->getPartnerId());
+		
+		$result->streamerType = $this->getPartner()->getStreamerType();
+		if (!$result->streamerType)
+		{
+			if($isSecured)
+				$result->streamerType = kConf::get('secured_default_streamer_type');
+			elseif($dbEntry->getDuration() <= kConf::get('short_entries_max_duration'))
+				$result->streamerType = kConf::get('short_entries_default_streamer_type');
+			else
+				$result->streamerType = kConf::get('default_streamer_type');
+		}
+			
+		$result->mediaProtocol = $this->getPartner()->getMediaProtocol();
+		if (!$result->mediaProtocol)
+		{
+			if($isSecured)
+				$result->mediaProtocol = kConf::get('secured_default_media_protocol');
+			elseif($dbEntry->getDuration() <= kConf::get('short_entries_max_duration'))
+				$result->mediaProtocol = kConf::get('short_entries_default_media_protocol');
+			else
+				$result->mediaProtocol = kConf::get('default_media_protocol');
+		}
+		
 		return $result;
 	}
 	
