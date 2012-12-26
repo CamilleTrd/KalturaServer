@@ -204,5 +204,12 @@ interface PermissionName extends BaseEnum
 	
 	// not valid yet
 	
-	const ADMIN_WHITE_BRANDING = 'ADMIN_WHITE_BRANDING';		
+	const ADMIN_WHITE_BRANDING = 'ADMIN_WHITE_BRANDING';	
+
+	// new category permissions for the categoryUser
+	const CATEGORY_SUBSCRIBE = 'CATEGORY_SUBSCRIBE';
+	const CATEGORY_CONTRIBUTE = 'CATEGORY_CONTRIBUTE';
+	const CATEGORY_MODERATE = 'CATEGORY_MODERATE';
+	const CATEGORY_EDIT = 'CATEGORY_EDIT'; 
+	const CATEGORY_VIEW = 'CATEGORY_VIEW';
 }
