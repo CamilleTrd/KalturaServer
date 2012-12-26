@@ -27,7 +27,6 @@ if( count($allowedPartners) > 1 ) {
 			kmc_general_uiconf		: "<?php echo $kmc_general->getId(); ?>",
 			kmc_permissions_uiconf	: "<?php echo $kmc_permissions->getId(); ?>", 
 			allowed_partners		: <?php echo json_encode($allowedPartners); ?>,
-			hide_akamai_hd_network	: <?php echo ($hideAkamaiHDNetwork) ? "true" : "false"; ?>,
 			kmc_secured				: <?php echo (kConf::get("kmc_secured_login"))? "true" : "false"; ?>,
 		  /* END new vars KMC4 */
 		
@@ -49,9 +48,10 @@ if( count($allowedPartners) > 1 ) {
 			ignore_seo_links: <?php echo $ignoreSeoLinks; ?>,
 			ignore_entry_seo: <?php echo ($ignoreEntrySeoLinks) ? "true" : "false"; ?>,
 			embed_code_protocol_https: <?php echo ($useEmbedCodeProtocolHttps) ? "true" : "false"; ?>,
-			default_embed_code_type: 'auto',
-			has_v2_flavors: <?php echo ($v2Flavors) ? "true" : "false"; ?>,
-			<?php if($v2Flavors) { ?>default_delivery_type: 'hds',<?php } ?>
+			delivery_types	: <?php echo ($deliveryTypes) ? json_encode($deliveryTypes) : "{}"; ?>,
+			embed_code_types: <?php echo ($embedCodeTypes) ? json_encode($embedCodeTypes) : "{}"; ?>,
+			default_delivery_type: "<?php echo $defaultDeliveryType; ?>",
+			default_embed_code_type: "<?php echo $defaultEmbedCodeType; ?>",			
 			kcw_webcam_uiconf : "<?php echo $content_uiconfs_upload_webcam->getId(); ?>",
 			kcw_import_uiconf : "<?php echo $content_uiconfs_upload_import->getId(); ?>",
 			default_kdp		: {
