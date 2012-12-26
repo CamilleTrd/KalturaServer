@@ -147,19 +147,20 @@ class SphinxCategoryKuserCriteria extends SphinxCriteria
 	 */
 	protected function applyFilterFields(baseObjectFilter $filter)
 	{
+		$partnerId = kCurrentContext::$partner_id ? kCurrentContext::$partner_id : kCurrentContext::$ks_partner_id;
 		if ($filter->get('_in_status'))
 		{
 			$statusList = explode(',', $filter->get('_in_status'));
 			foreach ($statusList as &$status)
 			{
-				$status = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::STATUS, $status, kCurrentContext::getCurrentPartnerId());
+				$status = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::STATUS, $status, $partnerId);
 			}
 			$filter->set('_in_status', implode(',', $statusList));
 		}
 		
 		if ($filter->get('_eq_status'))
 		{
-			$filter->set('_eq_status', categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::STATUS, $filter->get('_eq_status'), kCurrentContext::getCurrentPartnerId()));
+			$filter->set('_eq_status', categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::STATUS, $filter->get('_eq_status'), $partnerId));
 		}
 		
 		if ($filter->get('_in_update_method'))
@@ -167,14 +168,14 @@ class SphinxCategoryKuserCriteria extends SphinxCriteria
 			$updateMethodList = explode(',', $filter->get('_in_update_method'));
 			foreach ($updateMethodList as &$updateMethod)
 			{
-				$updateMethod = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::UPDATE_METHOD, $updateMethod, kCurrentContext::getCurrentPartnerId());
+				$updateMethod = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::UPDATE_METHOD, $updateMethod, $partnerId);
 			}
 			$filter->set('_in_update_method', implode(',', $updateMethodList));
 		}
 		
 		if ($filter->get('_eq_update_method'))
 		{
-			$filter->set('_eq_update_method', categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::UPDATE_METHOD, $filter->get('_eq_update_method'), kCurrentContext::getCurrentPartnerId()));
+			$filter->set('_eq_update_method', categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::UPDATE_METHOD, $filter->get('_eq_update_method'), $partnerId));
 		}
 		
 		if ($filter->get('_matchor_permission_names'))
@@ -182,7 +183,7 @@ class SphinxCategoryKuserCriteria extends SphinxCriteria
 			$permissionNamesList = explode(',', $filter->get('_matchor_permission_names'));
 			foreach ($permissionNamesList as &$permissionName)
 			{
-				$permissionName = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::PERMISSION_NAMES, $permissionName, kCurrentContext::getCurrentPartnerId());
+				$permissionName = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::PERMISSION_NAMES, $permissionName, $partnerId);
 			}
 			$filter->set('_matchor_permission_names', implode(',', $permissionNamesList));
 		}
@@ -192,7 +193,7 @@ class SphinxCategoryKuserCriteria extends SphinxCriteria
 			$permissionNamesList = explode(',', $filter->get('_matchand_permission_names'));
 			foreach ($permissionNamesList as &$permissionName)
 			{
-				$permissionName = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::PERMISSION_NAMES, $permissionName, kCurrentContext::getCurrentPartnerId());
+				$permissionName = categoryKuser::getSearchIndexFieldValue(categoryKuserPeer::PERMISSION_NAMES, $permissionName, $partnerId);
 			}
 			$filter->set('_matchand_permission_names', implode(',', $permissionNamesList));
 		}

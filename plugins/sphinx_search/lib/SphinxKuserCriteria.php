@@ -193,26 +193,27 @@ class SphinxKuserCriteria extends SphinxCriteria
 	protected function applyFilterFields(baseObjectFilter $filter)
 	{		
 		//Role ids and kuser permission names are indexed with the partner ID
+		$partnerId = kCurrentContext::$partner_id ? kCurrentContext::$partner_id : kCurrentContext::$ks_partner_id;
 		if ($filter->get('_eq_role_ids'))
 		{
-			$filter->set('_eq_role_ids', kuser::getIndexedFieldValue('kuserPeer::ROLE_IDS', $filter->get('_eq_role_ids'), kCurrentContext::getCurrentPartnerId()));
+			$filter->set('_eq_role_ids', kuser::getIndexedFieldValue('kuserPeer::ROLE_IDS', $filter->get('_eq_role_ids'), $partnerId));
 		}
 		if ($filter->get('_in_role_ids'))
 		{
-			$filter->set('_eq_role_ids', kuser::getIndexedFieldValue('kuserPeer::ROLE_IDS', $filter->get('_eq_role_ids'), kCurrentContext::getCurrentPartnerId()));
+			$filter->set('_eq_role_ids', kuser::getIndexedFieldValue('kuserPeer::ROLE_IDS', $filter->get('_eq_role_ids'), $partnerId));
 		}
 		if ($filter->get('_mlikeand_permission_names'))
 		{
-			$permissionNames = kuser::getIndexedFieldValue('kuserPeer::PERMISSION_NAMES', $filter->get('_mlikeand_permission_names'), kCurrentContext::getCurrentPartnerId());
+			$permissionNames = kuser::getIndexedFieldValue('kuserPeer::PERMISSION_NAMES', $filter->get('_mlikeand_permission_names'), $partnerId);
 			$permissionNames = implode(' ', explode(',', $permissionNames));
-			$universalPermissionName = kuser::getIndexedFieldValue('kuserPeer::PERMISSION_NAMES', kuser::UNIVERSAL_PERMISSION, kCurrentContext::getCurrentPartnerId());
+			$universalPermissionName = kuser::getIndexedFieldValue('kuserPeer::PERMISSION_NAMES', kuser::UNIVERSAL_PERMISSION, $partnerId);
 			$value = "($universalPermissionName | ($permissionNames))";
 			$this->addMatch("@permission_names $value");
 			$filter->unsetByName('_mlikeand_permission_names');
 		}
 		if ($filter->get('_mlikeor_permission_names'))
 		{
-			$filter->set('_mlikeor_permission_names', kuser::getIndexedFieldValue('kuserPeer::PERMISSION_NAMES', $filter->get('_mlikeor_permission_names').','.kuser::UNIVERSAL_PERMISSION, kCurrentContext::getCurrentPartnerId()));
+			$filter->set('_mlikeor_permission_names', kuser::getIndexedFieldValue('kuserPeer::PERMISSION_NAMES', $filter->get('_mlikeor_permission_names').','.kuser::UNIVERSAL_PERMISSION, $partnerId));
 		}
 		
 		if($filter->get('_likex_puser_id_or_screen_name'))
