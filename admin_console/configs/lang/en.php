@@ -1023,7 +1023,7 @@ return array(
 
 	'Kaltura_Client_DropFolder_Enum_DropFolderStatus::DISABLED' => 'Disabled',
 	'Kaltura_Client_DropFolder_Enum_DropFolderStatus::ENABLED' => 'Enabled',
-	'Kaltura_Client_DropFolder_Enum_DropFolderStatus::ERROR' => 'Error',
+	'Kaltura_Client_DropFolder_Enum_DropFolderStatus::ERROR' => 'Enabled (Access Error)',
 
 	'Kaltura_Client_DropFolder_Enum_DropFolderType::LOCAL' => 'Local',
     'Kaltura_Client_DropFolder_Enum_DropFolderType::FTP' => 'Remote FTP',

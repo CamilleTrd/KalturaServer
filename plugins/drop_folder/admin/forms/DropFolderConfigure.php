@@ -88,11 +88,20 @@ class Form_DropFolderConfigure extends Infra_Form
 		$this->addElement($titleElement);
 		
 		$this->addConversionProfiles();
+				
+		$fileHandlerTypes = new Kaltura_Form_Element_EnumSelect('fileHandlerType', array('enum' => 'Kaltura_Client_DropFolder_Enum_DropFolderFileHandlerType'));
+		$fileHandlerTypes->setLabel('Ingestion Workflow:');
+		$fileHandlerTypes->setRequired(true);
+		$fileHandlerTypes->setAttrib('onchange', 'handlerTypeChanged()');
+		$this->addElement($fileHandlerTypes);
 		
+		$handlerConfigForm = new Form_ContentFileHandlerConfig();
+		$this->addSubForm($handlerConfigForm, 'contentHandlerConfig'); 
+
 		$this->addElement('text', 'fileNamePatterns', array(
 			'label' 		=> 'Source File Name Patterns (to handle):',
 			'required'		=> true,
-		    'value'			=> '*.*',
+		    'value'			=> '*.xml',
 			'filters'		=> array('StringTrim'),
 		));
 		
@@ -101,15 +110,6 @@ class Form_DropFolderConfigure extends Infra_Form
 			'filters'		=> array('StringTrim'),
 		));
 		
-		$fileHandlerTypes = new Kaltura_Form_Element_EnumSelect('fileHandlerType', array('enum' => 'Kaltura_Client_DropFolder_Enum_DropFolderFileHandlerType'));
-		$fileHandlerTypes->setLabel('Ingestion Source:');
-		$fileHandlerTypes->setRequired(true);
-		$fileHandlerTypes->setAttrib('onchange', 'handlerTypeChanged()');
-		$this->addElement($fileHandlerTypes);
-		
-		$handlerConfigForm = new Form_ContentFileHandlerConfig();
-		$this->addSubForm($handlerConfigForm, 'contentHandlerConfig'); 
-
 		$this->addElement('hidden', 'crossLine2', array(
 			'decorators' => array('ViewHelper', array('Label', array('placement' => 'append')), array('HtmlTag',  array('tag' => 'hr', 'class' => 'crossLine')))
 		));		
@@ -153,11 +153,13 @@ class Form_DropFolderConfigure extends Infra_Form
 		$fileDeletePolicies = new Kaltura_Form_Element_EnumSelect('fileDeletePolicy', array('enum' => 'Kaltura_Client_DropFolder_Enum_DropFolderFileDeletePolicy'));
 		$fileDeletePolicies->setLabel('File Deletion Policy:');
 		$fileDeletePolicies->setRequired(true);
+		$fileDeletePolicies->setValue(Kaltura_Client_DropFolder_Enum_DropFolderFileDeletePolicy::AUTO_DELETE);
 		$this->addElement($fileDeletePolicies);
 		
 		$this->addElement('text', 'autoFileDeleteDays', array(
 			'label' 		=> 'Auto delete files after (days):',
 			'required'		=> true,
+			'value'			=> 0,
 			'filters'		=> array('StringTrim'),
 		));
 		
@@ -177,6 +179,8 @@ class Form_DropFolderConfigure extends Infra_Form
             ));
 		    $this->addSubForm($extendTypeSubForm, self::EXTENSION_SUBFORM_NAME);
 		}
+    	
+		//------------------------------------
 	}
 	
 	
@@ -188,7 +192,12 @@ class Form_DropFolderConfigure extends Infra_Form
 		if ($object->fileHandlerType === Kaltura_Client_DropFolder_Enum_DropFolderFileHandlerType::CONTENT) {
 			$this->getSubForm('contentHandlerConfig')->populateFromObject($object->fileHandlerConfig, false);
 		}
-				
+		
+		//add troubleshoot form only to existing object
+		$troubleshootForm = new Form_TroubleshootConfig();
+		$this->addSubForm($troubleshootForm, 'troubleshootConfig');		
+		$troubleshootForm->populateFromObject($object, false);
+						
 		$props = $object;
 		if(is_object($object))
 			$props = get_object_vars($object);
@@ -231,7 +240,6 @@ class Form_DropFolderConfigure extends Infra_Form
 		if ($extendTypeSubForm) {
 		    $object =  $extendTypeSubForm->getObject($object, $objectType, $properties, $add_underscore, $include_empty_fields);
 		}
-		
 		return $object;
 	}
 	

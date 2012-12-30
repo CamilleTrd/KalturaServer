@@ -39,7 +39,7 @@ class DropFolder extends BaseDropFolder
 		}
 				
 		if (is_null($this->getFileDeletePolicy())) {
-			$this->setFileDeletePolicy(DropFolderFileDeletePolicy::MANUAL_DELETE);
+			$this->setFileDeletePolicy(DropFolderFileDeletePolicy::AUTO_DELETE);
 		}
 		
 		if (is_null($this->getAutoFileDeleteDays())) {
@@ -97,6 +97,7 @@ class DropFolder extends BaseDropFolder
 	const CUSTOM_DATA_FILE_SIZE_CHECK_INTERVAL = 'file_size_check_interval';
 	const CUSTOM_DATA_AUTO_FILE_DELETE_DAYS  = 'auto_file_delete_days';
 	const CUSTOM_DATA_IGNORE_FILE_NAME_PATTERNS = 'ignore_file_name_patterns';
+	const CUSTOM_DATA_LAST_ACCESSED_AT = 'last_accessed_at';
 	
 	
 	// File size check interval - value in seconds
@@ -131,7 +132,7 @@ class DropFolder extends BaseDropFolder
 	{
 		$this->putInCustomData(self::CUSTOM_DATA_AUTO_FILE_DELETE_DAYS, $days);
 	}
-	
+		
 	// Ignore file patterns
 		
 	/**
@@ -147,7 +148,20 @@ class DropFolder extends BaseDropFolder
 		$this->putInCustomData(self::CUSTOM_DATA_IGNORE_FILE_NAME_PATTERNS, $patterns);
 	}
 	
+	// last accessed by watcher
+		
+	/**
+	 * @return int
+	 */
+	public function getLastAccessedAt()
+	{
+		return $this->getFromCustomData(self::CUSTOM_DATA_LAST_ACCESSED_AT);
+	}
 	
+	public function setLastAccessedAt($date)
+	{
+		$this->putInCustomData(self::CUSTOM_DATA_LAST_ACCESSED_AT, $date);
+	}
 	
 	public function getCacheInvalidationKeys()
 	{
@@ -162,12 +176,22 @@ class DropFolder extends BaseDropFolder
 	{
 		return kFileTransferMgrType::LOCAL;
 	}
-			
+
+	/**
+	 * Login using fileTransferMgr according to the available credentials
+	 * @param kFileTransferMgr $fileTransferMgr
+	 */
 	public function loginByCredentialsType(kFileTransferMgr $fileTransferMgr)
 	{
 		return $fileTransferMgr->login(null, null, null);
 	}
-			
+
+	/**
+	 * get full local file path
+	 * @param string $fileName
+	 * @param int $fileId
+	 * @param kFileTransferMgr $fileTransferMgr
+	 */
 	public function getLocalFilePath($fileName, $fileId, kFileTransferMgr $fileTransferMgr)
 	{
 		$dropFolderFilePath = $this->getPath().'/'.$fileName;
