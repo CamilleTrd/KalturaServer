@@ -198,12 +198,12 @@ index kaltura_category
 
 index kaltura_kuser
 {
-	path	 = /opt/kaltura/sphinx/kaltura_kuser_rt
+	path	 = @BASE_DIR@/sphinx/kaltura_kuser_rt
 	dict	 = keywords
 	min_prefix_len	 = 3
 	enable_star	 = 1
-	rt_attr_bigint	 = login_data_id
-	rt_attr_bigint	 = is_admin
+	rt_attr_uint	 = login_data_id
+	rt_attr_uint	 = is_admin
 	rt_field	 = screen_name
 	rt_field	 = full_name
 	rt_field	 = first_name
@@ -211,9 +211,9 @@ index kaltura_kuser
 	rt_field	 = email
 	rt_field	 = about_me
 	rt_field	 = tags
-	rt_attr_bigint	 = entries
-	rt_attr_bigint	 = storage_size
-	rt_attr_bigint	 = kuser_status
+	rt_attr_uint	 = entries
+	rt_attr_uint	 = storage_size
+	rt_attr_uint	 = kuser_status
 	rt_attr_timestamp	 = created_at
 	rt_attr_timestamp	 = updated_at
 	rt_attr_bigint	 = partner_id
@@ -225,18 +225,12 @@ index kaltura_kuser
 	rt_field	 = permission_names
 	rt_field	 = role_ids
 	rt_field	 = plugins_data
-	rt_attr_uint	 = metadata_date_0
-	rt_attr_uint	 = metadata_date_1
-	rt_attr_uint	 = metadata_date_2
-	rt_attr_uint	 = metadata_date_3
-	rt_attr_uint	 = metadata_date_4
-	rt_attr_uint	 = metadata_date_5
-	rt_attr_uint	 = metadata_date_6
-	rt_attr_uint	 = metadata_date_7
-	rt_attr_uint	 = metadata_date_8
-	rt_attr_uint	 = metadata_date_9
+	rt_attr_timestamp	 = metadata_date_0
+	rt_attr_timestamp	 = metadata_date_1
+	rt_attr_timestamp	 = metadata_date_2
+	rt_attr_timestamp	 = metadata_date_3
 	type	 = rt
-	blend_chars	 = `, ~, U+23, ^, (, ), -, =, [, ], {, }, ', \, |, /, U+0C, <, !, *, $, ;, :
+	blend_chars	 = `, ~, U+23, ^, (, ), -, =, [, ], {, }, ', \, |, /, <, !, *, $, ;, :
 	charset_type	 = utf-8
 	rt_mem_limit	 = 1024M
 	charset_table	 = %, &, _, +, ?, ., @, >, 0..9, A..Z->a..z, a..z, U+410..U+42F->U+430..U+44F, U+430..U+44F, \
@@ -287,7 +281,7 @@ index kaltura_kuser
 index kaltura_category_kuser
 {
 	type	 = rt
-	path	 = /opt/kaltura/sphinx/kaltura_category_kuser_rt
+	path	 = @BASE_DIR@/sphinx/kaltura_category_kuser_rt
 	rt_attr_uint	 = category_id
 	rt_attr_uint	 = kuser_id
 	rt_attr_uint	 = int_id
