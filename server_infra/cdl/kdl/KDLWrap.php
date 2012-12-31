@@ -1,7 +1,7 @@
 <?php
-include_once("KDLMediaInfoLoader.php");
-include_once('KDLProcessor.php');
-include_once 'KDLUtils.php';
+//include_once("KDLMediaInfoLoader.php");
+//include_once('KDLProcessor.php');
+//include_once 'KDLUtils.php';
 
 	/* ===========================
 	 * KDLWrap
@@ -196,9 +196,6 @@ class KDLWrap
 		else {
 			$flavor->_isNonComply = false;
 		}
-		
-		$flavor->_force = $target->IsForceTranscoding()? true: false;
-		
 		if($target->_clipStart)
 			$flavor->setClipOffset($target->_clipStart);
 		if($target->_clipDur)
