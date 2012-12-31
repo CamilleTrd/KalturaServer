@@ -12,7 +12,6 @@ class KDLFlavor extends KDLMediaDataSet {
 	const BitrateNonComplyFlagBit = 2;
 	const MissingContentNonComplyFlagBit = 4;
 	const ForceCommandLineFlagBit = 8;
-	const ForceTranscodingFlagBit = 16;
 
 	/* ---------------------
 	 * Data
@@ -333,14 +332,6 @@ $plannedDur = 0;
 	{
 		return ( ($this->_flags & KDLFlavor::BitrateNonComplyFlagBit)
 		||($this->_flags & KDLFlavor::MissingContentNonComplyFlagBit));
-	}
-
-	/* ------------------------------
-	 * IsForceTranscoding
-	 */
-	public function IsForceTranscoding()
-	{
-		return ( ($this->_flags & KDLFlavor::ForceTranscodingFlagBit));
 	}
 
 	/* ------------------------------
