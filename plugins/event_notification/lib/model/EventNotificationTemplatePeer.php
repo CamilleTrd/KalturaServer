@@ -136,6 +136,26 @@ class EventNotificationTemplatePeer extends BaseEventNotificationTemplatePeer
 		
 		return EventNotificationTemplatePeer::doSelect ( $criteria, $con );
 	}
+	
+	/**
+	 * Retrieve event notification templates according to systemName
+	 * @param string $systemName
+	 * @param int $excludeId
+	 * @param PropelPDO $con
+	 * @return array<EventNotificationTemplate>
+	 */
+	public static function retrieveBySystemName ($systemName, $excludeId = null, PropelPDO $con = null)
+	{
+	    $criteria = new Criteria ( EventNotificationTemplatePeer::DATABASE_NAME );
+		$criteria->add ( EventNotificationTemplatePeer::STATUS, EventNotificationTemplateStatus::ACTIVE );
+		$criteria->add ( EventNotificationTemplatePeer::SYSTEM_NAME, $systemName );
+		if ($excludeId)
+		    $criteria->add( EventNotificationTemplatePeer::ID, $excludeId, Criteria::NOT_EQUAL);
+		    
+		$criteria->add(EventNotificationTemplatePeer::PARTNER_ID, kCurrentContext::getCurrentPartnerId());
+		
+		return EventNotificationTemplatePeer::doSelect($criteria);
+	}
 
 } // EventNotificationTemplatePeer
 
