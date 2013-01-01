@@ -441,7 +441,9 @@ insert  into `permission`(`id`,`type`,`name`,`friendly_name`,`description`,`part
 (194,1,'SYSTEM_ADMIN_MP_REDIRECT','Base system admin permission','',-2,1,'','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
 (195,2,'FEATURE_END_USER_REPORTS',NULL,NULL,99,1,NULL,NULL,now(),now(),NULL),
 (196,'1','HOSTED_PAGES_BASE','Hosted pages access','Hosted pages access','-3','1','','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
-(197,'4','PARTNER_-3_GROUP_*_PERMISSION','Hosted pages permission for all partners','Hosted pages permission for all partners','-3','1','','',now(),now(),'a:1:{s:13:\"partner_group\";s:1:\"*\";}');
+(197,'4','PARTNER_-3_GROUP_*_PERMISSION','Hosted pages permission for all partners','Hosted pages permission for all partners','-3','1','','',now(),now(),'a:1:{s:13:\"partner_group\";s:1:\"*\";}'),
+(198,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_MANAGE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_BASE','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
+(199,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_DELETE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_MANAGE','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}');
 
 insert  into `permission_item`(`id`,`type`,`partner_id`,`param_1`,`param_2`,`param_3`,`param_4`,`param_5`,`tags`,`created_at`,`updated_at`,`custom_data`) values 
 (1,'kApiActionPermissionItem',0,'metadata_metadataprofile','list','','','',NULL,now(),now(),NULL),
@@ -1283,7 +1285,29 @@ insert  into `permission_item`(`id`,`type`,`partner_id`,`param_1`,`param_2`,`par
 (837,'kApiActionPermissionItem',0,'partner','count','','','',NULL,now(),now(),NULL),
 (838,'kApiParameterPermissionItem',0,'KalturaPartner','partnerGroupType','read','','',NULL,now(),now(),NULL),
 (839,'kApiActionPermissionItem','0','session','get','','','',NULL,now(),now(),NULL),
-(840,'kApiActionPermissionItem','-3','session','impersonatebyks','','','',NULL,now(),now(),NULL);
+(840,'kApiActionPermissionItem','-3','session','impersonatebyks','','','',NULL,now(),now(),NULL),
+(841,'kApiActionPermissionItem','0','eventnotification_eventnotificationtemplate','update','','','',NULL,now(),now(),NULL),
+(842,'kApiActionPermissionItem','0','eventnotification_eventnotificationtemplate','delete','','','',NULL,now(),now(),NULL),
+(843,'kApiActionPermissionItem','0','eventnotification_eventnotificationtemplate','clone','','','',NULL,now(),now(),NULL),
+(845,'kApiActionPermissionItem','0','eventnotification_eventnotificationtemplate','updatestatus','','','',NULL,now(),now(),NULL),
+(846,'kApiActionPermissionItem','0','eventnotification_eventnotificationtemplate','listtemplates','','','',NULL,now(),now(),NULL),
+(847,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','manualDispatchEnabled','insert','','',NULL,now(),now(),NULL),
+(848,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','manualDispatchEnabled','update','','',NULL,now(),now(),NULL),
+(849,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','automaticDispatchEnabled','insert','','',NULL,now(),now(),NULL),
+(850,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','automaticDispatchEnabled','update','','',NULL,now(),now(),NULL),
+(851,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','name','update','','',NULL,now(),now(),NULL),
+(852,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','systemName','update','','',NULL,now(),now(),NULL),
+(853,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','description','update','','',NULL,now(),now(),NULL),
+(854,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','eventType','update','','',NULL,now(),now(),NULL),
+(855,'kApiParameterPermissionItem','-2','KalturaEventNotificationTemplate','eventConditions','update','','',NULL,now(),now(),NULL),
+(856,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','format','update','','',NULL,now(),now(),NULL),
+(857,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','priority','update','','',NULL,now(),now(),NULL),
+(858,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','hostName','update','','',NULL,now(),now(),NULL),
+(859,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','messageID','update','','',NULL,now(),now(),NULL),
+(860,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','customHeaders','update','','',NULL,now(),now(),NULL),
+(861,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','contentParameters','update','','',NULL,now(),now(),NULL);
+
+
 
 insert  into `permission_to_permission_item`(`id`,`permission_id`,`permission_item_id`,`created_at`,`updated_at`) values 
 (10,67,2,now(),now()),
@@ -3378,7 +3402,12 @@ insert  into `permission_to_permission_item`(`id`,`permission_id`,`permission_it
 (119493,196,839,now(),now()),
 (119494,197,839,now(),now()),
 (119495,196,840,now(),now()),
-(119496,197,840,now(),now());
+(119496,197,840,now(),now()),
+(168551,199,842,now(),now()),
+(170557,198,841,now(),now()),
+(170556,198,843,now(),now()),
+(170555,198,845,now(),now()),
+(170555,185,846,now(),now());
 
 insert  into `storage_profile`(`id`,`created_at`,`updated_at`,`partner_id`,`name`,`system_name`,`desciption`,`status`,`protocol`,`storage_url`,`storage_base_dir`,`storage_username`,`storage_password`,`storage_ftp_passive_mode`,`delivery_http_base_url`,`delivery_rmp_base_url`,`delivery_iis_base_url`,`min_file_size`,`max_file_size`,`flavor_params_ids`,`max_concurrent_connections`,`custom_data`,`path_manager_class`,`url_manager_class`,`delivery_priority`,`delivery_status`) values 
 (0,now(),now(),0,'@DC_NAME@','','@DC_DESCRIPTION@',3,0,NULL,'@STORAGE_BASE_DIR@',NULL,NULL,NULL,'@DELIVERY_HTTP_BASE_URL@','@DELIVERY_RTMP_BASE_URL@','@DELIVERY_ISS_BASE_URL@',NULL,NULL,NULL,NULL,NULL,NULL,'',1,1);
