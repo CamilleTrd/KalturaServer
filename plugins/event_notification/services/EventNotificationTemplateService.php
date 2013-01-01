@@ -201,8 +201,9 @@ class EventNotificationTemplateService extends KalturaBaseService
 			
 		if (! $pager)
 			$pager = new KalturaFilterPager ();
-			
-		$eventNotificationTemplateFilter = $filter->toObject();
+
+		$eventNotificationTemplateFilter = new EventNotificationTemplateFilter();
+		$filter->toObject($eventNotificationTemplateFilter);
 
 		$c = new Criteria();
 		$eventNotificationTemplateFilter->attachToCriteria($c);
