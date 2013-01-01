@@ -595,7 +595,7 @@ class UserService extends KalturaBaseUserService
 	 */
 	function indexAction($id, $shouldUpdate = true)
 	{
-		$kuser = kuserPeer::getActiveKuserByPartnerAndUid(kCurrentContext::getCurrentPartnerId(), $id);
+		$kuser = kuserPeer::getActiveKuserByPartnerAndUid(kCurrentContext::$partner_id ? kCurrentContext::$partner_id : kCurrentContext::$ks_partner_id, $id);
 		
 		if (!$kuser)
 			throw new KalturaAPIException(KalturaErrors::USER_NOT_FOUND);
