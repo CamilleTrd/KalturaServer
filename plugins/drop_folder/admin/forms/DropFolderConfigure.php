@@ -219,7 +219,7 @@ class Form_DropFolderConfigure extends Infra_Form
 		$extendTypeSubForm = $this->getSubForm(self::EXTENSION_SUBFORM_NAME);
 		if ($extendTypeSubForm) {
 		    $extendTypeSubForm->populateFromObject($object, $add_underscore);
-		}
+		}		
 	}
 	
 	public function getObject($objectType, array $properties, $add_underscore = true, $include_empty_fields = false)
@@ -288,22 +288,6 @@ class Form_DropFolderConfigure extends Infra_Form
 				'filters'		=> array('StringTrim'),
 			));
 		}
-	}
-	
-	    /**
-     * Validate the form
-     *
-     * @param  array $data
-     * @return boolean
-     */
-    public function isValid($data)
-    {
-    	$fileHandlerType = $data['fileHandlerType'];
-    	if ($fileHandlerType != Kaltura_Client_DropFolder_Enum_DropFolderFileHandlerType::CONTENT) {
-    		$this->removeSubForm('contentHandlerConfig');
-    	}
-    	return parent::isValid($data);
-    }
- 
+	} 
 			
 }
