@@ -196,4 +196,19 @@ class categoryKuser extends BasecategoryKuser {
 	
     public function setBulkUploadId ($bulkUploadId){$this->putInCustomData (self::BULK_UPLOAD_ID, $bulkUploadId);}
 	public function getBulkUploadId (){return $this->getFromCustomData(self::BULK_UPLOAD_ID);}
+	
+	/* (non-PHPdoc)
+	 * @see lib/model/om/Baseentry#postInsert()
+	 */
+	public function postInsert(PropelPDO $con = null)
+	{
+		parent::postInsert($con);
+	
+		if (!$this->alreadyInSave)
+		{
+			$category = $this->getcategory();
+			if($category && $category->getPrivacyContexts() && !PermissionPeer::isValidForPartner(PermissionName::FEATURE_ENTITLEMENT_USED, $category->getPartnerId()))
+				PermissionPeer::enableForPartner(PermissionName::FEATURE_ENTITLEMENT_USED, PermissionType::SPECIAL_FEATURE, $category->getPartnerId());
+		}
+	}
 } // categoryKuser
