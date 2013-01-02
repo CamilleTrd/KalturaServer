@@ -70,7 +70,8 @@ class embedIframeJsAction extends sfAction
 		{
 			//die($url."?".$_SERVER["QUERY_STRING"]);
 			header("pragma:");
-			kFileUtils::dumpUrl($url."?".$_SERVER["QUERY_STRING"]);
+			$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? "https" : "http";
+			kFileUtils::dumpUrl($url."?protocol=$protocol&".$_SERVER["QUERY_STRING"]);
 		}
 
 		requestUtils::sendCachingHeaders(60);
