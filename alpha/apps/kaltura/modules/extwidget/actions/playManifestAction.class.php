@@ -276,6 +276,15 @@ class playManifestAction extends kalturaAction
 		
 		// enforce access control
 		$base64Referrer = $this->getRequestParameter("referrer");
+		$hashes = $this->getRequestParameter("hashes");
+		$hashes = urldecode($hashes);
+		$hashes = explode(",", $hashes);
+		$keyValueHashes = array(); 
+		foreach ($hashes as $keyValueHashString)
+		{
+			list ($key, $value) = explode('=', $keyValueHashString);
+			$keyValueHashes[$key] = $value;
+		}
 		
 		// replace space in the base64 string with + as space is invalid in base64 strings and caused
 		// by symfony calling str_parse to replace + with spaces.
@@ -286,6 +295,8 @@ class playManifestAction extends kalturaAction
 			$referrer = ""; // base64_decode can return binary data
 			
 		$this->secureEntryHelper = new KSecureEntryHelper($this->entry, $ksStr, $referrer, accessControlContextType::PLAY);
+		$this->secureEntryHelper->setHashes($keyValueHashes);
+		
 		if ($this->secureEntryHelper->shouldPreview())
 		{
 			$this->clipTo = $this->secureEntryHelper->getPreviewLength() * 1000;

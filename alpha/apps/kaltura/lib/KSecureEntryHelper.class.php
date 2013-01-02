@@ -47,6 +47,11 @@ class KSecureEntryHelper
 	
 	
 	/**
+	 * @var array
+	 */
+	private $hashes;
+	
+	/**
 	 * 
 	 * @param entry $entry
 	 */
@@ -300,13 +305,19 @@ class KSecureEntryHelper
 	
 	private function getAccessControlScope()
 	{
-		$scope = new accessControlScope();
+		$accessControlScope = new accessControlScope();
 		if ($this->referrer)
-			$scope->setReferrer($this->referrer);
-		$scope->setKs($this->ks);
-		$scope->setEntryId($this->entry->getId());
-		$scope->setContexts($this->contexts);
-		return $scope;
+			$accessControlScope->setReferrer($this->referrer);
+		$accessControlScope->setKs($this->ks);
+		$accessControlScope->setEntryId($this->entry->getId());
+		$accessControlScope->setContexts($this->contexts);
+		$accessControlScope->setHashes($this->hashes);
+		
+		return $accessControlScope;
 	}
 
+	public function setHashes (array $hashes)
+	{
+		$this->hashes = $hashes;
+	}
 }
