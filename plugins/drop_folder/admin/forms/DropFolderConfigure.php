@@ -94,6 +94,11 @@ class Form_DropFolderConfigure extends Infra_Form
 		$fileHandlerTypes->setRequired(true);
 		$fileHandlerTypes->setAttrib('onchange', 'handlerTypeChanged()');
 		$this->addElement($fileHandlerTypes);
+
+		$fileHandlerTypeForView = new Kaltura_Form_Element_EnumSelect('fileHandlerTypeForView', array('enum' => 'Kaltura_Client_DropFolder_Enum_DropFolderFileHandlerType'));
+		$fileHandlerTypeForView->setAttrib('disabled', 'disabled');
+		$fileHandlerTypeForView->setAttrib('style', 'display:none');
+		$this->addElement($fileHandlerTypeForView);
 		
 		$handlerConfigForm = new Form_ContentFileHandlerConfig();
 		$this->addSubForm($handlerConfigForm, 'contentHandlerConfig'); 
@@ -143,7 +148,7 @@ class Form_DropFolderConfigure extends Infra_Form
 		$titleElement->setLabel('Folder Policies');
 		$titleElement->setDecorators(array('ViewHelper', array('Label', array('placement' => 'append')), array('HtmlTag',  array('tag' => 'b'))));
 		$this->addElement($titleElement);
-		
+			
 		$this->addElement('text', 'fileSizeCheckInterval', array(
 			'label' 		=> 'Check file size every (seconds):',
 			'required'		=> true,
@@ -213,7 +218,7 @@ class Form_DropFolderConfigure extends Infra_Form
 				}
 			}
 		}
-		
+				
 		$this->setDefault('typeForView', $object->type);
 		
 		$extendTypeSubForm = $this->getSubForm(self::EXTENSION_SUBFORM_NAME);
