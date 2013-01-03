@@ -491,6 +491,19 @@ class PartnerController extends Zend_Controller_Action
 		$filterIncludRemoved = $request->getParam('include_removed');
 		$filterPackage = $request->getParam('partner_package');
 		
+		if (!in_array($filterType,array('','none'))) {
+			session_start();
+			$_SESSION['partnerLastSearchValue'] = $filterInput;
+		}
+		
+		if($filterType == 'byEntryId') {
+			$client = Infra_ClientHelper::getClient();
+			$adminConsolePlugin = Kaltura_Client_AdminConsole_Plugin::get($client);
+			/* @var $entry Kaltura_Client_Type_MediaEntry */
+			$entry = $adminConsolePlugin->entryAdmin->get($filterInput);
+			$filterType = 'byid';
+			$filterInput = $entry->partnerId;
+		}	
 		if ($filterType == 'byid')
 		{
 			$filter->idIn = $filterInput;
