@@ -276,14 +276,18 @@ class playManifestAction extends kalturaAction
 		
 		// enforce access control
 		$base64Referrer = $this->getRequestParameter("referrer");
+		
 		$hashes = $this->getRequestParameter("hashes");
-		$hashes = urldecode($hashes);
-		$hashes = explode(",", $hashes);
 		$keyValueHashes = array(); 
-		foreach ($hashes as $keyValueHashString)
+		if ($hashes)
 		{
-			list ($key, $value) = explode('=', $keyValueHashString);
-			$keyValueHashes[$key] = $value;
+			$hashes = urldecode($hashes);
+			$hashes = explode(",", $hashes);
+			foreach ($hashes as $keyValueHashString)
+			{
+				list ($key, $value) = explode('=', $keyValueHashString);
+				$keyValueHashes[$key] = $value;
+			}
 		}
 		
 		// replace space in the base64 string with + as space is invalid in base64 strings and caused
