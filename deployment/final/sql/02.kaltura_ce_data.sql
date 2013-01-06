@@ -444,6 +444,8 @@ insert  into `permission`(`id`,`type`,`name`,`friendly_name`,`description`,`part
 (197,'4','PARTNER_-3_GROUP_*_PERMISSION','Hosted pages permission for all partners','Hosted pages permission for all partners','-3','1','','',now(),now(),'a:1:{s:13:\"partner_group\";s:1:\"*\";}'),
 (198,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_MANAGE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_BASE','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
 (199,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_DELETE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_MANAGE','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}');
+(200,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_BASE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','EVENTNOTIFICATION_PLUGIN_PERMISSION','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}');
+
 
 insert  into `permission_item`(`id`,`type`,`partner_id`,`param_1`,`param_2`,`param_3`,`param_4`,`param_5`,`tags`,`created_at`,`updated_at`,`custom_data`) values 
 (1,'kApiActionPermissionItem',0,'metadata_metadataprofile','list','','','',NULL,now(),now(),NULL),
@@ -3407,7 +3409,10 @@ insert  into `permission_to_permission_item`(`id`,`permission_id`,`permission_it
 (170557,198,841,now(),now()),
 (170556,198,843,now(),now()),
 (170555,198,845,now(),now()),
-(170554,185,846,now(),now());
+(170554,185,846,now(),now()),
+(170558,200,843,now(),now()),
+(170559,200,761,now(),now()),
+(170559,200,762,now(),now());
 
 insert  into `storage_profile`(`id`,`created_at`,`updated_at`,`partner_id`,`name`,`system_name`,`desciption`,`status`,`protocol`,`storage_url`,`storage_base_dir`,`storage_username`,`storage_password`,`storage_ftp_passive_mode`,`delivery_http_base_url`,`delivery_rmp_base_url`,`delivery_iis_base_url`,`min_file_size`,`max_file_size`,`flavor_params_ids`,`max_concurrent_connections`,`custom_data`,`path_manager_class`,`url_manager_class`,`delivery_priority`,`delivery_status`) values 
 (0,now(),now(),0,'@DC_NAME@','','@DC_DESCRIPTION@',3,0,NULL,'@STORAGE_BASE_DIR@',NULL,NULL,NULL,'@DELIVERY_HTTP_BASE_URL@','@DELIVERY_RTMP_BASE_URL@','@DELIVERY_ISS_BASE_URL@',NULL,NULL,NULL,NULL,NULL,NULL,'',1,1);
@@ -3554,8 +3559,8 @@ insert  into `ui_conf`(`id`,`obj_type`,`partner_id`,`subp_id`,`conf_file_path`,`
 (6235211,2,0,0,'content/uiconf/special/6235211.xml','blackboard video only - course gallery default','0','0',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (6235221,2,0,0,'content/uiconf/special/6235221.xml','blackboard video only for \'my media\' page','0','0',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (6386311,2,0,0,'content/uiconf/special/6386311.xml','moodle2.0  kuploader','','',NULL,'/flash/kupload/v1.2.8/KUpload.swf',now(),now(),'',1,'','a:2:{s:8:\"autoplay\";b:0;s:9:\"automuted\";b:0;}',2,NULL,2,3,NULL,NULL),
-(6548391,8,0,0,'content/uiconf/special/6548391.xml','BlackBoard 2.0 - course gallery player','400','330',NULL,'/flash/kdp3/v3.5.33/kdp3.swf',now(),now(),'',1,'kdp3,player',NULL,2,NULL,2,2,NULL,NULL),
-(6548401,8,0,0,'content/uiconf/special/6548401.xml','BlackBoard 2.0 - My Media Player','400','330',NULL,'/flash/kdp3/v3.5.33/kdp3.swf',now(),now(),'',1,'kdp3,player',NULL,2,NULL,2,2,NULL,NULL),
+(6548391,8,0,0,'content/uiconf/special/6548391.xml','BlackBoard 2.0 - course gallery player','400','330',NULL,'/flash/kdp3/v3.6.11/kdp3.swf',now(),now(),'',1,'kdp3,player',NULL,2,NULL,2,2,NULL,NULL),
+(6548401,8,0,0,'content/uiconf/special/6548401.xml','BlackBoard 2.0 - My Media Player','400','330',NULL,'/flash/kdp3/v3.6/11/kdp3.swf',now(),now(),'',1,'kdp3,player',NULL,2,NULL,2,2,NULL,NULL),
 (6548421,0,0,0,'content/uiconf/special/6548421.xml','kClip for clippApp in Blackboard 2.0','','',NULL,'/flash/kclip/v1.1.4/KClip.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (6709401,2,0,0,'content/uiconf/special/6709401.xml','moodle2 uploader regular','640','480',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (6709411,8,0,0,'content/uiconf/special/6709411.xml','Default Dark -- moodle2 extension KDP','400','365',NULL,'/flash/kdp3/v3.6.14/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
