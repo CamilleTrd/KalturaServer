@@ -446,6 +446,7 @@ CREATE TABLE `category_kuser` (
   `puser_id` varchar(100) NOT NULL,
   `partner_id` int(11) NOT NULL,
   `permission_level` tinyint(4) DEFAULT NULL,
+  `permission_names` TEXT,
   `status` tinyint(4) DEFAULT NULL,
   `inherit_from_category` int(11) DEFAULT NULL,
   `update_method` int(11) DEFAULT NULL,

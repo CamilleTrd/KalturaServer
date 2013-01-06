@@ -3407,7 +3407,7 @@ insert  into `permission_to_permission_item`(`id`,`permission_id`,`permission_it
 (170557,198,841,now(),now()),
 (170556,198,843,now(),now()),
 (170555,198,845,now(),now()),
-(170555,185,846,now(),now());
+(170554,185,846,now(),now());
 
 insert  into `storage_profile`(`id`,`created_at`,`updated_at`,`partner_id`,`name`,`system_name`,`desciption`,`status`,`protocol`,`storage_url`,`storage_base_dir`,`storage_username`,`storage_password`,`storage_ftp_passive_mode`,`delivery_http_base_url`,`delivery_rmp_base_url`,`delivery_iis_base_url`,`min_file_size`,`max_file_size`,`flavor_params_ids`,`max_concurrent_connections`,`custom_data`,`path_manager_class`,`url_manager_class`,`delivery_priority`,`delivery_status`) values 
 (0,now(),now(),0,'@DC_NAME@','','@DC_DESCRIPTION@',3,0,NULL,'@STORAGE_BASE_DIR@',NULL,NULL,NULL,'@DELIVERY_HTTP_BASE_URL@','@DELIVERY_RTMP_BASE_URL@','@DELIVERY_ISS_BASE_URL@',NULL,NULL,NULL,NULL,NULL,NULL,'',1,1);
@@ -3546,7 +3546,7 @@ insert  into `ui_conf`(`id`,`obj_type`,`partner_id`,`subp_id`,`conf_file_path`,`
 (4396231,2,0,0,'content/uiconf/special/4396231.xml','drupal webcam only','','',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (4396241,2,0,0,'content/uiconf/special/4396241.xml','drupal all media','','',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (4421301,2,0,0,'content/uiconf/special/4421301.xml','blackboard video only','','',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
-(4421471,2,0,0,'content/uiconf/special/4421471.xml','blackboard all media','','',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
+(4421471,2,0,0,'content/uiconf/special/4421471.xml','blackboard all medi170555a','','',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (4674731,8,0,0,'content/uiconf/special/4674731.xml','Default Light-- moodle extension KDP3','400','365',NULL,'/flash/kdp3/v3.5.7.6/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (4674741,8,0,0,'content/uiconf/special/4674741.xml','Default Dark -- moodle extension KDP','400','365',NULL,'/flash/kdp3/v3.5.7.6/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (4860481,8,0,0,'content/uiconf/special/4860481.xml','Moodle - PPT Widget - Video on the Left','900','483',NULL,'/flash/kdp3/v3.5.7.7/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
@@ -3558,8 +3558,8 @@ insert  into `ui_conf`(`id`,`obj_type`,`partner_id`,`subp_id`,`conf_file_path`,`
 (6548401,8,0,0,'content/uiconf/special/6548401.xml','BlackBoard 2.0 - My Media Player','400','330',NULL,'/flash/kdp3/v3.5.33/kdp3.swf',now(),now(),'',1,'kdp3,player',NULL,2,NULL,2,2,NULL,NULL),
 (6548421,0,0,0,'content/uiconf/special/6548421.xml','kClip for clippApp in Blackboard 2.0','','',NULL,'/flash/kclip/v1.1.4/KClip.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (6709401,2,0,0,'content/uiconf/special/6709401.xml','moodle2 uploader regular','640','480',NULL,'/flash/kcw/v2.1.6.7/ContributionWizard.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
-(6709411,8,0,0,'content/uiconf/special/6709411.xml','Default Dark -- moodle2 extension KDP','400','365',NULL,'/flash/kdp3/v3.5.7.6/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
-(6709421,8,0,0,'content/uiconf/special/6709421.xml','Default Light-- moodle2 extension KDP3','400','365',NULL,'/flash/kdp3/v3.5.7.6/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
+(6709411,8,0,0,'content/uiconf/special/6709411.xml','Default Dark -- moodle2 extension KDP','400','365',NULL,'/flash/kdp3/v3.6.14/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
+(6709421,8,0,0,'content/uiconf/special/6709421.xml','Default Light-- moodle2 extension KDP3','400','365',NULL,'/flash/kdp3/v3.6.14/kdp3.swf',now(),now(),'',1,'',NULL,2,NULL,2,3,NULL,NULL),
 (7473501,8,0,0,'content/uiconf/special/7473501.xml','Sakai_Default_ImagePlayer','400','300',NULL,'/flash/kdp3/v3.5.6/kdp3.swf',now(),now(),'','1','kdp3,player','a:2:{s:8:\"autoplay\";b:0;s:9:\"automuted\";b:0;}',2,NULL,2,2,'1','/html5/html5lib/v1.6.12.16/mwEmbedLoader.php'),
 (7473511,8,0,0,'content/uiconf/special/7473511.xml','Sakai_Default_AudioPlayer','400','100',NULL,'/flash/kdp3/v3.5.6/kdp3.swf',now(),now(),'','1','kdp3,player','a:2:{s:8:\"autoplay\";b:0;s:9:\"automuted\";b:0;}',2,NULL,2,2,'1','/html5/html5lib/v1.6.12.16/mwEmbedLoader.php'),
 (7473521,8,0,0,'content/uiconf/special/7473521.xml','Sakai_default_video_player','400','330',NULL,'/flash/kdp3/v3.5.6/kdp3.swf',now(),now(),'','1','','a:2:{s:8:\"autoplay\";b:0;s:9:\"automuted\";b:0;}','2',NULL,2,2,'1','/html5/html5lib/v1.6.12.16/mwEmbedLoader.php'),
