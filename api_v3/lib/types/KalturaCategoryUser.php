@@ -110,8 +110,7 @@ class KalturaCategoryUser extends KalturaObject implements IFilterable {
 		if (is_null ( $dbObject ))
 			$dbObject = new categoryKuser ();
 		/* @var $dbObject categoryKuser */
-		parent::toObject ( $dbObject, $skip );
-		if (!is_null($dbObject->getPermissionLevel()))
+		if (!$this->permissionNames && $this->permissionLevel && $this->permissionLevel != $dbObject->getPermissionLevel())
 		{
 			$permissionNames = $dbObject->getPermissionNames();
 			if ($permissionNames)
@@ -123,7 +122,7 @@ class KalturaCategoryUser extends KalturaObject implements IFilterable {
 			{
 				$permissionNamesArr = array();
 			}
-			switch ($dbObject->getPermissionLevel())
+			switch ($this->permissionLevel)
 			{
 				case CategoryKuserPermissionLevel::MEMBER:
 					$permissionNamesArr[] = PermissionName::CATEGORY_VIEW;
@@ -143,10 +142,10 @@ class KalturaCategoryUser extends KalturaObject implements IFilterable {
 					$permissionNamesArr[] = PermissionName::CATEGORY_VIEW;
 					break;
 			}
-			$permissionNamesArr[] = PermissionName::CATEGORY_SUBSCRIBE;
 			
 			$dbObject->setPermissionNames(implode(',', $permissionNamesArr));
 		}
+		parent::toObject ( $dbObject, $skip );
 		
 		return $dbObject;
 	}
