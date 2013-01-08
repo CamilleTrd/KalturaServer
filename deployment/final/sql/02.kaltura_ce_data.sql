@@ -1316,7 +1316,7 @@ insert  into `permission_item`(`id`,`type`,`partner_id`,`param_1`,`param_2`,`par
 (859,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','messageID','update','','',NULL,now(),now(),NULL),
 (860,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','customHeaders','update','','',NULL,now(),now(),NULL),
 (861,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','contentParameters','update','','',NULL,now(),now(),NULL),
-(862,'kApiActionPermissionItem',0,'user','index','','','',NULL,now(),now(),NULL)
+(862,'kApiActionPermissionItem',0,'user','index','','','',NULL,now(),now(),NULL),
 (863,'kApiActionPermissionItem',0,'category','unlockcategories','','','',NULL,now(),now(),NULL);
 
 
