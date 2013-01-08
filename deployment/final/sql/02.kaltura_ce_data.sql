@@ -1315,8 +1315,9 @@ insert  into `permission_item`(`id`,`type`,`partner_id`,`param_1`,`param_2`,`par
 (858,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','hostName','update','','',NULL,now(),now(),NULL),
 (859,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','messageID','update','','',NULL,now(),now(),NULL),
 (860,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','customHeaders','update','','',NULL,now(),now(),NULL),
-(861,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','contentParameters','update','','',NULL,now(),now(),NULL);
-
+(861,'kApiParameterPermissionItem','-2','KalturaEmailNotificationTemplate','contentParameters','update','','',NULL,now(),now(),NULL),
+(862,'kApiActionPermissionItem',0,'user','index','','','',NULL,now(),now(),NULL)
+(863,'kApiActionPermissionItem',0,'category','unlockcategories','','','',NULL,now(),now(),NULL);
 
 
 insert  into `permission_to_permission_item`(`id`,`permission_id`,`permission_item_id`,`created_at`,`updated_at`) values 
@@ -3420,7 +3421,9 @@ insert  into `permission_to_permission_item`(`id`,`permission_id`,`permission_it
 (170554,185,846,now(),now()),
 (170558,200,843,now(),now()),
 (170559,200,761,now(),now()),
-(170560,200,762,now(),now());
+(170560,200,762,now(),now()),
+(170561,117,862,now(),now()),
+(170562,5,863,now(),now());
 
 insert  into `storage_profile`(`id`,`created_at`,`updated_at`,`partner_id`,`name`,`system_name`,`desciption`,`status`,`protocol`,`storage_url`,`storage_base_dir`,`storage_username`,`storage_password`,`storage_ftp_passive_mode`,`delivery_http_base_url`,`delivery_rmp_base_url`,`delivery_iis_base_url`,`min_file_size`,`max_file_size`,`flavor_params_ids`,`max_concurrent_connections`,`custom_data`,`path_manager_class`,`url_manager_class`,`delivery_priority`,`delivery_status`) values 
 (0,now(),now(),0,'@DC_NAME@','','@DC_DESCRIPTION@',3,0,NULL,'@STORAGE_BASE_DIR@',NULL,NULL,NULL,'@DELIVERY_HTTP_BASE_URL@','@DELIVERY_RTMP_BASE_URL@','@DELIVERY_ISS_BASE_URL@',NULL,NULL,NULL,NULL,NULL,NULL,'',1,1);
