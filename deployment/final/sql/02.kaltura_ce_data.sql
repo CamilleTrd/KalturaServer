@@ -1256,7 +1256,7 @@ insert  into `permission_item`(`id`,`type`,`partner_id`,`param_1`,`param_2`,`par
 (798,'kApiActionPermissionItem',0,'categoryuser','deactivate','','','',NULL,now(),now(),NULL),
 (799,'kApiActionPermissionItem',0,'category','index','','','',NULL,now(),now(),NULL),
 (800,'kApiActionPermissionItem',0,'categoryentry','index','','','',NULL,now(),now(),NULL),
-(801,'kApiActionPermissionItem',0,'categorykuser','index','','','',NULL,now(),now(),NULL),
+(801,'kApiActionPermissionItem',0,'categoryuser','index','','','',NULL,now(),now(),NULL),
 (802,'kApiActionPermissionItem',0,'partner','listfeaturestatus','','','',NULL,now(),now(),NULL),
 (803,'kApiActionPermissionItem',0,'category','move','','','',NULL,now(),now(),NULL),
 (804,'kApiParameterPermissionItem',0,'KalturaCategory','appearInList','insert','','',NULL,now(),now(),NULL),
