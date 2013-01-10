@@ -452,8 +452,10 @@ insert  into `permission`(`id`,`type`,`name`,`friendly_name`,`description`,`part
 (197,'4','PARTNER_-3_GROUP_*_PERMISSION','Hosted pages permission for all partners','Hosted pages permission for all partners','-3','1','','',now(),now(),'a:1:{s:13:\"partner_group\";s:1:\"*\";}'),
 (198,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_MANAGE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_BASE','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
 (199,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_DELETE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_MANAGE','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
-(200,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_BASE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','EVENTNOTIFICATION_PLUGIN_PERMISSION','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}');
-
+(200,'1','eventNotification.EVENT_NOTIFICATIONS_TEMPLATE_BASE','Event Notification Template Service permission','Event Notification Template Service permission','0','1','EVENTNOTIFICATION_PLUGIN_PERMISSION','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
+(201,3,'FEATURE_LIKE','Like plugin permission','Permission to replace entry rank feature with likes',99,1,'','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
+(202,3,'FEATURE_REMOTE_STORAGE_INGEST','Remote storage ingestion permission','Feature allowing to ingest content from remote storage profile',99,1,'','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}'),
+(203,3,'FEATURE_REMOTE_STORAGE','Remote storage usage permission','Feature allowing to use the remote storage feature',99,1,'','',now(),now(),'a:1:{s:13:\"partner_group\";s:0:\"\";}');
 
 insert  into `permission_item`(`id`,`type`,`partner_id`,`param_1`,`param_2`,`param_3`,`param_4`,`param_5`,`tags`,`created_at`,`updated_at`,`custom_data`) values 
 (1,'kApiActionPermissionItem',0,'metadata_metadataprofile','list','','','',NULL,now(),now(),NULL),
